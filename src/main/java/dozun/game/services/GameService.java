@@ -1,16 +1,13 @@
 package dozun.game.services;
 
 import dozun.game.constants.BetType;
-import dozun.game.entities.GameEntity;
 import dozun.game.repositories.GameRepository;
-import dozun.game.threading.models.TaskResult;
+import dozun.game.models.DiceResult;
 import dozun.game.utils.GameGenerator;
 import dozun.game.utils.RandomNumberGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
 
 @Service
 public class GameService {
@@ -30,7 +27,7 @@ public class GameService {
         this.gameRepository = gameRepository;
     }
 
-    public TaskResult generateGame(){
+    public DiceResult generateGame(){
         return gameGenerator.getGame();
     }
 

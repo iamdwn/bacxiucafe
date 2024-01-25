@@ -1,6 +1,6 @@
 package dozun.game.threading.tasks;
 
-import dozun.game.threading.models.TaskResult;
+import dozun.game.models.DiceResult;
 import dozun.game.utils.RandomNumberGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -8,12 +8,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class MultiThreadTask implements Runnable {
     private RandomNumberGenerator rng;
-    private TaskResult taskResult;
+    private DiceResult diceResult;
 
     @Autowired
-    public MultiThreadTask(RandomNumberGenerator rng, TaskResult taskResult) {
+    public MultiThreadTask(RandomNumberGenerator rng, DiceResult diceResult) {
         this.rng = rng;
-        this.taskResult = taskResult;
+        this.diceResult = diceResult;
     }
 
     @Override
@@ -22,9 +22,9 @@ public class MultiThreadTask implements Runnable {
         Long dice2 = RandomNumberGenerator.getDice2();
         Long dice3 = RandomNumberGenerator.getDice3();
 
-        taskResult.setDice1(dice1);
-        taskResult.setDice1(dice2);
-        taskResult.setDice1(dice3);
+        diceResult.setDice1(dice1);
+        diceResult.setDice1(dice2);
+        diceResult.setDice1(dice3);
     }
 
 }

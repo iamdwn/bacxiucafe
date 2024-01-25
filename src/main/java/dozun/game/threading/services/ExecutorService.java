@@ -1,6 +1,6 @@
 //package dozun.game.services;
 //
-//import dozun.game.threading.models.TaskResult;
+//import dozun.game.models.TaskResult;
 //
 //import java.util.concurrent.CyclicBarrier;
 //import java.util.concurrent.Executors;

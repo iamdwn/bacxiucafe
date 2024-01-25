@@ -38,6 +38,4 @@ public class RandomNumberGenerator {
     public static Long getDice3() {
         return dice3;
     }
-
-
 }

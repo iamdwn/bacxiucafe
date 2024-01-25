@@ -1,18 +1,18 @@
 package dozun.game.utils;
 
-import dozun.game.threading.models.TaskResult;
+import dozun.game.models.DiceResult;
 import org.springframework.stereotype.Component;
 
 @Component
 public class GameGenerator {
-    private TaskResult taskResult;
+    private DiceResult diceResult;
 
-    public TaskResult getGame(){
+    public DiceResult getGame(){
         Long dice1 = RandomNumberGenerator.getDice1();
         Long dice2 = RandomNumberGenerator.getDice2();
         Long dice3 = RandomNumberGenerator.getDice3();
 
-        return new TaskResult(
+        return new DiceResult(
                 dice1,
                 dice2,
                 dice3

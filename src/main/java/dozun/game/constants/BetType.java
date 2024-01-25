@@ -3,5 +3,13 @@ package dozun.game.constants;
 public enum BetType {
     XIU,
     TAI,
-    LOSE
+    LE,
+    CHAN,
+    DON,
+    DOI,
+    BOBA,
+    GAPDOI,
+    TAMBAO,
+    aTAMBAO,
+    TOHOP
 }
