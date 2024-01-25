@@ -1,5 +1,6 @@
-package dozun.game.model;
+package dozun.game.models;
 
+import dozun.game.constants.ResponseStatus;
 import lombok.*;
 
 @Setter
@@ -8,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResponseObject {
-    private String status;
+    private ResponseStatus status;
     private String message;
     private Object data;
 }

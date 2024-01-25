@@ -2,8 +2,6 @@ package dozun.game.dtos;
 
 import lombok.*;
 
-@Setter
-@Getter
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

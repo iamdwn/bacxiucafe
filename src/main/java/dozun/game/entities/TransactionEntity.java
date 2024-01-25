@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-@Setter
-@Getter
 @Entity
 @Data
 @NoArgsConstructor
@@ -23,12 +21,12 @@ public class TransactionEntity {
     private WalletEntity wallet;
 
     @Column
-    private Float amount;
+    private Double amount;
 
     @Column
-    private Float balance;
+    private Double balance;
 
-    public TransactionEntity(WalletEntity wallet, Float amount, Float balance) {
+    public TransactionEntity(WalletEntity wallet, Double amount, Double balance) {
         this.wallet = wallet;
         this.amount = amount;
         this.balance = balance;

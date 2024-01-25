@@ -2,19 +2,16 @@ package dozun.game.services;
 
 import dozun.game.constants.ResponseStatus;
 import dozun.game.dtos.UserDTO;
-import dozun.game.entities.CustomUserDetails;
 import dozun.game.entities.RoleEntity;
 import dozun.game.entities.UserEntity;
 import dozun.game.hash.Hashing;
-import dozun.game.model.ResponseObject;
+import dozun.game.models.ResponseObject;
 import dozun.game.repositories.RoleRepository;
 import dozun.game.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +28,7 @@ public class UserService {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private Hashing hashing;
+    @Autowired
     public UserService(PasswordEncoder passwordEncoder, UserRepository userRepository, RoleRepository roleRepository, Hashing hashing) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
@@ -61,12 +59,12 @@ public class UserService {
     public ResponseEntity<ResponseObject> signup(UserDTO user) {
         Optional<UserEntity> userEntity = userRepository.findByUsernameAndStatusTrue(user.getUsername());
         if (userEntity.isPresent()) return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ResponseObject(ResponseStatus.BAD_REQUEST.name(), "this username is exist", ""));
+                .body(new ResponseObject(ResponseStatus.BAD_REQUEST, "this username is exist", ""));
 
         userEntity.get().setUsername(user.getUsername());
         userEntity.get().setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(userEntity.get());
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new ResponseObject(ResponseStatus.SUCCESS.name(), "signup successfully", ""));
+                .body(new ResponseObject(ResponseStatus.SUCCESS, "signup successfully", ""));
     }
 }

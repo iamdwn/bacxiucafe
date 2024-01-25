@@ -1,15 +1,16 @@
 package dozun.game.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import dozun.game.constants.BetType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-@Setter
-@Getter
 @Entity
 @Data
 @NoArgsConstructor
@@ -40,23 +41,34 @@ public class GameEntity {
     private Long dice3;
 
     @Column
-    private Boolean status;
+    private BetType type;
 
     @Column
-    private String result;
+    private LocalDateTime gameStart;
+
+    @Column
+    private Long duration;
 
     public GameEntity(List<GameDetailEntity> games, List<UserEntity> users) {
         this.games = games;
         this.users = users;
     }
 
-    public GameEntity(List<GameDetailEntity> games, List<UserEntity> users, Long dice1, Long dice2, Long dice3, Boolean status, String result) {
+    public GameEntity(List<GameDetailEntity> games, List<UserEntity> users, Long dice1, Long dice2, Long dice3, BetType type) {
         this.games = games;
         this.users = users;
         this.dice1 = dice1;
         this.dice2 = dice2;
         this.dice3 = dice3;
-        this.status = status;
-        this.result = result;
+        this.type = type;
+    }
+
+    public GameEntity(Long dice1, Long dice2, Long dice3, BetType type, LocalDateTime gameStart, Long duration) {
+        this.dice1 = dice1;
+        this.dice2 = dice2;
+        this.dice3 = dice3;
+        this.type = type;
+        this.gameStart = gameStart;
+        this.duration = duration;
     }
 }

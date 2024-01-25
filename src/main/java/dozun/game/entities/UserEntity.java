@@ -10,8 +10,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
 
-@Setter
-@Getter
 @Entity
 @Data
 @NoArgsConstructor

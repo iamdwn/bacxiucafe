@@ -15,8 +15,6 @@ import java.util.Set;
 
 @Entity
 @Data
-@Getter
-@Setter
 @NoArgsConstructor
 @Table(name = "role")
 @EntityListeners(AuditingEntityListener.class)

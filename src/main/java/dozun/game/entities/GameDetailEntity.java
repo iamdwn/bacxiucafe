@@ -6,8 +6,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-@Setter
-@Getter
 @Entity
 @Data
 @NoArgsConstructor
@@ -31,7 +29,7 @@ public class GameDetailEntity {
     private GameEntity game;
 
     @Column
-    private Float betAmount;
+    private Double betAmount;
 
     @Column
     @Enumerated
@@ -41,11 +39,18 @@ public class GameDetailEntity {
     @Enumerated
     private GameResult gameResult;
 
-    public GameDetailEntity(UserEntity user, GameEntity game, Float betAmount, BetType betType, GameResult gameResult) {
+    public GameDetailEntity(UserEntity user, GameEntity game, Double betAmount, BetType betType, GameResult gameResult) {
         this.user = user;
         this.game = game;
         this.betAmount = betAmount;
         this.betType = betType;
         this.gameResult = gameResult;
+    }
+
+    public GameDetailEntity(UserEntity user, GameEntity game, Double betAmount, BetType betType) {
+        this.user = user;
+        this.game = game;
+        this.betAmount = betAmount;
+        this.betType = betType;
     }
 }
