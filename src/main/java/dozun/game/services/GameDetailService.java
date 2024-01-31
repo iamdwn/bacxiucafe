@@ -50,6 +50,8 @@ public class GameDetailService {
                 betType
         );
 
+
+
         return gameDetailRepository.save(gameDetailEntity);
     }
 }

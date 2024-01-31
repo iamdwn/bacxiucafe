@@ -18,8 +18,8 @@ import java.util.*;
 @EntityListeners(AuditingEntityListener.class)
 public class UserEntity implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column
     private String fullName;
@@ -107,7 +107,7 @@ public class UserEntity implements UserDetails {
         return List.of(new SimpleGrantedAuthority(authorities.toString()));
     }
 
-    public UserEntity(Long id, String fullName, String username, String email, String password, Set<RoleEntity> roles) {
+    public UserEntity(UUID id, String fullName, String username, String email, String password, Set<RoleEntity> roles) {
         this.id = id;
         this.fullName = fullName;
         this.username = username;

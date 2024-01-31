@@ -4,16 +4,17 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDTO {
     private String fullName;
-    private Long userId;
+    private UUID userId;
     private String username;
     private String email;
-    private Long id;
+    private UUID id;
     private Boolean status;
     private String role;
     private List<String> roles;
@@ -26,7 +27,7 @@ public class UserDTO {
         this.email = email;
     }
 
-    public UserDTO(String fullName, String password, String email, Long id, Boolean status, String role, List<String> roles) {
+    public UserDTO(String fullName, String password, String email, UUID id, Boolean status, String role, List<String> roles) {
         this.fullName = fullName;
         this.password = password;
         this.email = email;

@@ -28,7 +28,7 @@ public class AuthenticationService {
         String fullname = user.getFullName();
         String password = user.getPassword();
         String email = user.getEmail();
-        Long id = user.getId();
+        UUID id = user.getId();
         List<RoleEntity> role = null;
         if(user != null){
             role = roleCustomRepo.getRole(user);

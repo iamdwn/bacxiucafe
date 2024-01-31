@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Data
@@ -20,8 +21,8 @@ import java.util.List;
 public class GameEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @OneToMany(mappedBy = "game")
     @JsonIgnore
@@ -32,29 +33,32 @@ public class GameEntity {
     private List<UserEntity> users = new ArrayList<>();
 
     @Column
-    private Long dice1;
+    private int dice1;
 
     @Column
-    private Long dice2;
+    private int dice2;
 
     @Column
-    private Long dice3;
+    private int dice3;
 
     @Column
     private BetType type;
 
     @Column
-    private LocalDateTime gameStart;
+    private Date gameStart;
 
     @Column
-    private Long duration;
+    private int duration;
+
+    @Column
+    private Boolean status;
 
     public GameEntity(List<GameDetailEntity> games, List<UserEntity> users) {
         this.games = games;
         this.users = users;
     }
 
-    public GameEntity(List<GameDetailEntity> games, List<UserEntity> users, Long dice1, Long dice2, Long dice3, BetType type) {
+    public GameEntity(List<GameDetailEntity> games, List<UserEntity> users, int dice1, int dice2, int dice3, BetType type) {
         this.games = games;
         this.users = users;
         this.dice1 = dice1;
@@ -63,12 +67,13 @@ public class GameEntity {
         this.type = type;
     }
 
-    public GameEntity(Long dice1, Long dice2, Long dice3, BetType type, LocalDateTime gameStart, Long duration) {
+    public GameEntity(int dice1, int dice2, int dice3, BetType type, Date gameStart, int duration, Boolean status) {
         this.dice1 = dice1;
         this.dice2 = dice2;
         this.dice3 = dice3;
         this.type = type;
         this.gameStart = gameStart;
         this.duration = duration;
+        this.status = status;
     }
 }

@@ -1,83 +1,105 @@
 package dozun.game.services;
 
 import dozun.game.constants.BetType;
+import dozun.game.constants.Duration;
+import dozun.game.entities.GameEntity;
 import dozun.game.repositories.GameRepository;
 import dozun.game.models.DiceResult;
 import dozun.game.utils.GameGenerator;
 import dozun.game.utils.RandomNumberGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class GameService {
 
     private GameGenerator gameGenerator;
     private RandomNumberGenerator randomNumberGenerator;
-    private TaskExecutor taskExecutor;
     private BetType betType;
     private GameRepository gameRepository;
+    private Duration duration;
 
+    private ScheduledExecutorService scheduler;
+    private ScheduledExecutorService scheLockBet;
+    private AtomicInteger counter;
 
     @Autowired
-    public GameService(GameGenerator gameGenerator, RandomNumberGenerator randomNumberGenerator, TaskExecutor taskExecutor, GameRepository gameRepository) {
+    public GameService(GameGenerator gameGenerator, RandomNumberGenerator randomNumberGenerator, GameRepository gameRepository, AtomicInteger counter, ScheduledExecutorService scheduler, ScheduledExecutorService scheLockBet) {
         this.gameGenerator = gameGenerator;
         this.randomNumberGenerator = randomNumberGenerator;
-        this.taskExecutor = taskExecutor;
         this.gameRepository = gameRepository;
+        this.scheduler = scheduler;
+        this.scheLockBet = scheLockBet;
+        this.counter = new AtomicInteger(0);
     }
 
-    public DiceResult generateGame(){
-        return gameGenerator.getGame();
-    }
+
+//    public DiceResult start() {
+//        Timer timer = new Timer();
+//        timer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                int currentCount = counter.incrementAndGet();
+//                DiceResult diceResult = gameGenerator.getGame();
+//                BetType gameType = checkGameType(diceResult);
+//                GameEntity gameEntity = new GameEntity(
+//                        diceResult.getDice1(),
+//                        diceResult.getDice2(),
+//                        diceResult.getDice3(),
+//                        gameType,
+//                        new Date(),
+//                        Duration.valueOf("GAME_DURATION").getDur(),
+//                        true
+//                );
+//                gameRepository.save(gameEntity);
+//        }, 0, Duration.valueOf("GAME_DURATION").getDur() * 1000L);
+//}
 
     public void start() {
+        scheduler.scheduleAtFixedRate(this::generate,0, 5, TimeUnit.SECONDS);
+    }
 
-//        LocalDateTime now = LocalDateTime.now();
-//        Long startTime = System.currentTimeMillis();
-//        Long endTime = System.currentTimeMillis();
-//        Long elapsedTime = endTime - startTime;
-//
-//        RandomNumberGenerator generator = new RandomNumberGenerator();
-//
-//        RandomTask dice1 = new RandomTask(generator);
-//        RandomTask dice2 = new RandomTask(generator);
-//        RandomTask dice3 = new RandomTask(generator);
-//
-//        Thread thread1 = new Thread(dice1);
-//        Thread thread2 = new Thread(dice2);
-//        Thread thread3 = new Thread(dice3);
-//
-//        thread1.start();
-//        thread2.start();
-//        thread3.start();
+    private void generate() {
+        DiceResult diceResult = gameGenerator.getGame();
+        BetType gameType = checkGameType(diceResult);
+        GameEntity gameEntity = new GameEntity(
+                diceResult.getDice1(),
+                diceResult.getDice2(),
+                diceResult.getDice3(),
+                gameType,
+                new Date(),
+                Duration.valueOf("GAME_DURATION").getDur(),
+                true
+        );
+        scheLockBet.schedule(() -> {
+            lockBet(gameEntity);
+        }, 3, TimeUnit.SECONDS);
+//        scheLockBet.shutdown();
+        gameRepository.save(gameEntity);
+    }
 
-//        Long total = dice1.getResult() +
-//                dice2.getResult() +
-//                dice3.getResult();
+    private void lockBet(GameEntity gameEntity) {
+        gameEntity.setStatus(false);
+        gameRepository.save(gameEntity);
+    }
 
-//        betType = (total > 3 && total < 11)
-//                ? BetType.XIU
-//                : (total > 10 && total < 18)
-//                ? BetType.TAI
-//                : BetType.LOSE;
+    public BetType checkGameType(DiceResult diceResult) {
+        int total;
+        if (diceResult.getDice1() == diceResult.getDice2()
+                && diceResult.getDice1() == diceResult.getDice3())
+            return BetType.TAMBAO;
 
-//        GameEntity gameEntity = new GameEntity(
-//                dice1.getResult(),
-//                dice2.getResult(),
-//                dice3.getResult(),
-//                betType,
-//                now,
-//                30L
-//        );
-//        gameRepository.save(gameEntity);
-//
-//        while ((elapsedTime/1000) <= 30) {
-//            endTime = System.currentTimeMillis();
-//            elapsedTime = endTime - startTime;
-//        }
+        total = diceResult.getDice1() + diceResult.getDice2() + diceResult.getDice3();
 
-//        gameRepository.delete(gameEntity);
-        throw new RuntimeException("game is ended");
+        if (total == 3 || total == 18) return BetType.TAMBAO;
+
+        if (total < 11) return BetType.XIU;
+        return BetType.TAI;
     }
 }

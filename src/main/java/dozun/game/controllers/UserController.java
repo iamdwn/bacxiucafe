@@ -3,6 +3,7 @@ package dozun.game.controllers;
 import dozun.game.dtos.UserDTO;
 import dozun.game.models.ResponseObject;
 import dozun.game.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +23,7 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<ResponseObject> signup(@RequestBody UserDTO user) {
+    public ResponseEntity<ResponseObject> signup(@Valid @RequestBody UserDTO user) {
         return userService.signup(user);
     }
 }

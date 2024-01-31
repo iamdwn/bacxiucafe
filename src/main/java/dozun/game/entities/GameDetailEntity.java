@@ -6,17 +6,19 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.util.UUID;
+
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "game_detail")
 @EntityListeners(AuditingEntityListener.class)
-public class GameDetailEntity {
+public class  GameDetailEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @ManyToOne
 //    @JsonIgnore

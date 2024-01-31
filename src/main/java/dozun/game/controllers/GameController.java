@@ -19,8 +19,8 @@ public class GameController {
         this.gameService = gameService;
     }
 
-    @PostMapping("/start")
-    public ResponseEntity<ResponseObject> start(@RequestHeader("Authorization") String token){
+    @GetMapping("/start")
+    public ResponseEntity<ResponseObject> generate(@RequestHeader("Authorization") String token){
         try {
             if (TokenChecker.checkToken(token)) {
                 gameService.start();
@@ -34,22 +34,4 @@ public class GameController {
                     .body(new ResponseObject(ResponseStatus.SUCCESS, ex.getMessage(), ""));
         }
     }
-
-    @GetMapping("/generate")
-    public ResponseEntity<ResponseObject> generate(@RequestHeader("Authorization") String token){
-        try {
-            if (TokenChecker.checkToken(token)) {
-
-                return ResponseEntity.status(HttpStatus.OK)
-                        .body(new ResponseObject(dozun.game.constants.ResponseStatus.SUCCESS, "game is starting", gameService.generateGame()));
-            }
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ResponseObject(dozun.game.constants.ResponseStatus.BAD_REQUEST, "failed", "bet failed"));
-        } catch (RuntimeException ex) {
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(new ResponseObject(ResponseStatus.SUCCESS, ex.getMessage(), ""));
-        }
-    }
-
-
 }

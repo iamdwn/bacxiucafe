@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Data
@@ -15,8 +16,8 @@ import java.util.List;
 public class WalletEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @OneToOne
     @JoinColumn(name = "wallet_id")

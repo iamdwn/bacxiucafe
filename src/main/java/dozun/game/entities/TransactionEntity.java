@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.util.UUID;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -13,8 +15,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class TransactionEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @ManyToOne
     @JoinColumn(name = "wallet_id")

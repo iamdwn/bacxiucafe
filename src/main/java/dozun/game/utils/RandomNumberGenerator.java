@@ -8,34 +8,34 @@ import java.util.Random;
 @Component
 public class RandomNumberGenerator {
 
-    private static Long dice1;
-    private static Long dice2;
-    private static Long dice3;
+    private static int dice1;
+    private static int dice2;
+    private static int dice3;
     private Random random = new Random();
 
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 3000)
     public void generateDice1() {
-        dice1 = random.nextLong(6) + 1;
+        dice1 = random.nextInt(6) + 1;
     }
 
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 3000)
     public void generateDice2() {
-        dice2 = random.nextLong(6) + 1;
+        dice2 = random.nextInt(6) + 1;
     }
 
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 3000)
     public void generateDice3() {
-        dice3 = random.nextLong(6) + 1;
+        dice3 = random.nextInt(6) + 1;
     }
 
-    public static Long getDice1() {
+    public static int getDice1() {
         return dice1;
     }
-    public static Long getDice2() {
+    public static int getDice2() {
         return dice2;
     }
 
-    public static Long getDice3() {
+    public static int getDice3() {
         return dice3;
     }
 }
