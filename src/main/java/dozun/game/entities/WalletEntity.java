@@ -17,10 +17,11 @@ public class WalletEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "wallet_id")
     private UUID id;
 
     @OneToOne
-    @JoinColumn(name = "wallet_id")
+    @JoinColumn(name = "user_id")
     private UserEntity user;
 
     @OneToMany(mappedBy = "wallet")

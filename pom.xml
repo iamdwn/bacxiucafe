@@ -73,6 +73,10 @@ http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
             <artifactId>java-jwt</artifactId>
             <version>3.19.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
         <!-- realtime to notification-->
         <!--        <dependency>-->
         <!--            <groupId>org.springframework.boot</groupId>-->

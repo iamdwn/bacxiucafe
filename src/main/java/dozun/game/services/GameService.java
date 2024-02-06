@@ -1,7 +1,7 @@
 package dozun.game.services;
 
-import dozun.game.constants.BetType;
-import dozun.game.constants.Duration;
+import dozun.game.enums.BetType;
+import dozun.game.enums.Duration;
 import dozun.game.entities.GameEntity;
 import dozun.game.repositories.GameRepository;
 import dozun.game.models.DiceResult;
@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class GameService {

@@ -100,6 +100,16 @@ public class UserEntity implements UserDetails {
         this.isVerify = isVerify;
     }
 
+    public UserEntity(String fullName, String username, String email, String password, Boolean status, Boolean isVerify, WalletEntity wallet) {
+        this.fullName = fullName;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.status = status;
+        this.isVerify = isVerify;
+        this.wallet = wallet;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();

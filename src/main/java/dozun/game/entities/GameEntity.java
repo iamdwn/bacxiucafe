@@ -1,12 +1,11 @@
 package dozun.game.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import dozun.game.constants.BetType;
+import dozun.game.enums.BetType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,6 +21,7 @@ public class GameEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "game_id")
     private UUID id;
 
     @OneToMany(mappedBy = "game")

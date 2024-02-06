@@ -1,4 +1,4 @@
-package dozun.game.constants;
+package dozun.game.enums;
 
 
 public enum Duration {

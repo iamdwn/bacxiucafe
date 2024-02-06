@@ -1,6 +1,6 @@
 package dozun.game.models;
 
-import dozun.game.constants.ResponseStatus;
+import dozun.game.enums.ResponseStatus;
 import lombok.*;
 
 @Setter

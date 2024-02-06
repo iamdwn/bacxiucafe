@@ -1,7 +1,7 @@
 package dozun.game.entities;
 
-import dozun.game.constants.BetType;
-import dozun.game.constants.GameResult;
+import dozun.game.enums.BetType;
+import dozun.game.enums.GameResult;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -18,6 +18,7 @@ public class  GameDetailEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "gameDetail_id")
     private UUID id;
 
     @ManyToOne

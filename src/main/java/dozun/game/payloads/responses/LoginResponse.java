@@ -1,4 +1,4 @@
-package dozun.game.dtos;
+package dozun.game.payloads.responses;
 
 import lombok.*;
 

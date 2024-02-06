@@ -1,6 +1,6 @@
 package dozun.game.test;
 
-import dozun.game.constants.ResponseStatus;
+import dozun.game.enums.ResponseStatus;
 import dozun.game.models.ResponseObject;
 import dozun.game.utils.TokenChecker;
 import org.springframework.beans.factory.annotation.Autowired;

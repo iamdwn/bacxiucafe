@@ -16,6 +16,7 @@ public class TransactionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "transaction_id")
     private UUID id;
 
     @ManyToOne

@@ -1,7 +1,7 @@
 package dozun.game.services;
 
-import dozun.game.constants.ResponseStatus;
-import dozun.game.dtos.UserDTO;
+import dozun.game.enums.ResponseStatus;
+import dozun.game.payloads.dtos.UserDTO;
 import dozun.game.entities.RoleEntity;
 import dozun.game.entities.UserEntity;
 import dozun.game.hash.Hashing;

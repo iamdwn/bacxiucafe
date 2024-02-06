@@ -1,5 +1,7 @@
 package dozun.game.controllers;
 
+import dozun.game.entities.WalletEntity;
+import dozun.game.repositories.WalletRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -7,7 +9,7 @@ import dozun.game.auth.AuthenticationResponse;
 import dozun.game.auth.AuthenticationRequest;
 import dozun.game.auth.MessageResponse;
 import dozun.game.auth.SignupRequest;
-import dozun.game.dtos.UserDTO;
+import dozun.game.payloads.dtos.UserDTO;
 import dozun.game.entities.RoleEntity;
 import dozun.game.entities.UserEntity;
 import dozun.game.repositories.RoleCustomRepository;
@@ -39,6 +41,9 @@ public class AuthenticationController {
 
     @Autowired
     RoleRepository roleRepository;
+
+    @Autowired
+    WalletRepository walletRepository;
 
     @Autowired
     PasswordEncoder encoder;
@@ -92,41 +97,43 @@ public class AuthenticationController {
         user.setRoles(roleEntities);
 
         userRepository.save(user);
-
+        walletRepository.save(new WalletEntity(
+                user, 0D
+        ));
         AuthenticationRequest authenticationRequest = new AuthenticationRequest(signUpRequest.getUsername(), signUpRequest.getPassword());
         return ResponseEntity.ok(authenticationService.authenticate(authenticationRequest));
     }
 
-    @PostMapping("google")
-    public ResponseEntity<?> loginGoogle(@Valid @RequestBody SignupRequest signUpRequest) {
-
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-        Optional<UserEntity> o_user = userRepository.findByUsernameAndStatusTrue(signUpRequest.getEmail());
-        if (o_user.isPresent()) {
-            String encodedPasswordFromDatabase = o_user.get().getPassword();
-            if (!passwordEncoder.matches(signUpRequest.getPassword(), encodedPasswordFromDatabase)) {
-                return ResponseEntity.badRequest().body(new MessageResponse("Error: Username or password is wrong!"));
-            } else {
-                AuthenticationRequest authenticationRequest = new AuthenticationRequest(signUpRequest.getEmail(), signUpRequest.getPassword());
-                return ResponseEntity.ok(authenticationService.authenticate(authenticationRequest));
-            }
-        }
-        UserEntity user = new UserEntity(signUpRequest.getFullName(),
-                signUpRequest.getUsername(),
-                signUpRequest.getEmail(),
-                encoder.encode(signUpRequest.getPassword()),
-                true,
-                true
-        );
-        Set<RoleEntity> roleEntities = new HashSet<>();
-        RoleEntity userRole = roleRepository.findByName("USER");
-        roleEntities.add(userRole);
-        user.setRoles(roleEntities);
-        userRepository.save(user);
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest(signUpRequest.getEmail(), signUpRequest.getPassword());
-        return ResponseEntity.ok(authenticationService.authenticate(authenticationRequest));
-    }
+//    @PostMapping("google")
+//    public ResponseEntity<?> loginGoogle(@Valid @RequestBody SignupRequest signUpRequest) {
+//
+//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//
+//        Optional<UserEntity> o_user = userRepository.findByUsernameAndStatusTrue(signUpRequest.getEmail());
+//        if (o_user.isPresent()) {
+//            String encodedPasswordFromDatabase = o_user.get().getPassword();
+//            if (!passwordEncoder.matches(signUpRequest.getPassword(), encodedPasswordFromDatabase)) {
+//                return ResponseEntity.badRequest().body(new MessageResponse("Error: Username or password is wrong!"));
+//            } else {
+//                AuthenticationRequest authenticationRequest = new AuthenticationRequest(signUpRequest.getEmail(), signUpRequest.getPassword());
+//                return ResponseEntity.ok(authenticationService.authenticate(authenticationRequest));
+//            }
+//        }
+//        UserEntity user = new UserEntity(signUpRequest.getFullName(),
+//                signUpRequest.getUsername(),
+//                signUpRequest.getEmail(),
+//                encoder.encode(signUpRequest.getPassword()),
+//                true,
+//                true
+//        );
+//        Set<RoleEntity> roleEntities = new HashSet<>();
+//        RoleEntity userRole = roleRepository.findByName("USER");
+//        roleEntities.add(userRole);
+//        user.setRoles(roleEntities);
+//        userRepository.save(user);
+//        AuthenticationRequest authenticationRequest = new AuthenticationRequest(signUpRequest.getEmail(), signUpRequest.getPassword());
+//        return ResponseEntity.ok(authenticationService.authenticate(authenticationRequest));
+//    }
 
     @GetMapping("/getUserInfo")
     public UserDTO InfoUser(@RequestHeader("Authorization") String token) {

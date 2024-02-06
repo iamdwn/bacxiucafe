@@ -10,4 +10,6 @@ import java.util.Optional;
 @Repository
 public interface GameRepository extends JpaRepository<GameEntity, Long> {
     Optional<GameEntity> findById(Long gameId);
+
+    Optional<GameEntity> findFirstByStatusIsTrueOrderByGameStartDesc();
 }

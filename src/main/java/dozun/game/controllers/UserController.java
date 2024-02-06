@@ -1,6 +1,6 @@
 package dozun.game.controllers;
 
-import dozun.game.dtos.UserDTO;
+import dozun.game.payloads.dtos.UserDTO;
 import dozun.game.models.ResponseObject;
 import dozun.game.services.UserService;
 import jakarta.validation.Valid;

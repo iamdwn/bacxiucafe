@@ -1,4 +1,4 @@
-package dozun.game.dtos;
+package dozun.game.payloads.dtos;
 
 import lombok.Getter;
 import lombok.ToString;
