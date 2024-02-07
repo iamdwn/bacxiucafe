@@ -6,6 +6,7 @@ import dozun.game.models.ResponseObject;
 import dozun.game.repositories.GameRepository;
 import dozun.game.services.GameService;
 import dozun.game.utils.TokenChecker;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin
+@Tag(name = "Board")
+//@Api(tags="Board")
 @RequestMapping("api/v1/game")
 public class GameController {
     private GameService gameService;
@@ -22,7 +26,7 @@ public class GameController {
     private GameRepository gameRepository;
 
     @Autowired
-    public GameController(GameService gameService, SimpMessagingTemplate messagingTemplate, GameRepository gameRepository) {
+    public GameController(GameService gameService, GameRepository gameRepository, SimpMessagingTemplate messagingTemplate) {
         this.gameService = gameService;
         this.messagingTemplate = messagingTemplate;
         this.gameRepository = gameRepository;
@@ -33,9 +37,6 @@ public class GameController {
         try {
             if (TokenChecker.checkToken(token)) {
                 gameService.start();
-                Optional<GameEntity> gameEntity = gameRepository.findFirstByStatusIsTrueOrderByGameStartDesc();
-                messagingTemplate.convertAndSend("/topic/gameStartResponse", gameEntity.get().getDice1() + ""
-                        + gameEntity.get().getDice2() + "" + gameEntity.get().getDice3());
                 return ResponseEntity.status(HttpStatus.OK)
                         .body(new ResponseObject(dozun.game.enums.ResponseStatus.SUCCESS, "game is starting", ""));
             }

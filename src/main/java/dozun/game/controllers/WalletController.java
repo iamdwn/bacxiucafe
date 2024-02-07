@@ -5,6 +5,7 @@ import dozun.game.enums.ResponseStatus;
 import dozun.game.models.ResponseObject;
 import dozun.game.services.WalletService;
 import dozun.game.utils.TokenChecker;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin
+@Tag(name = "Wallet")
+//@Api(tags="Wallet")
 @RequestMapping("/api/v1/user/wallet")
 public class WalletController {
     private WalletService walletService;

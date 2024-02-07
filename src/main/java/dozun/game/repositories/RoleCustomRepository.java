@@ -20,7 +20,7 @@ public class RoleCustomRepository {
     private EntityManager entityManager;
 
     public List<RoleEntity> getRole(UserEntity user) {
-        StringBuilder sql = new StringBuilder().append("SELECT bacxiucafe.role.name as name FROM bacxiucafe.user join bacxiucafe.user_role on bacxiucafe.user.id = bacxiucafe.user_role.users_id join bacxiucafe.role on bacxiucafe.role.id = bacxiucafe.user_role.roles_id");
+        StringBuilder sql = new StringBuilder().append("SELECT ydimnumf_taixiu.role.name as name FROM ydimnumf_taixiu.user join ydimnumf_taixiu.user_role on ydimnumf_taixiu.user.id = ydimnumf_taixiu.user_role.users_id join ydimnumf_taixiu.role on ydimnumf_taixiu.role.id = ydimnumf_taixiu.user_role.roles_id");
         sql.append(" Where 1=1");
         if (user.getUsername() != null) {
             sql.append(" and username = :username");

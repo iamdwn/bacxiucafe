@@ -2,6 +2,7 @@ package dozun.game.controllers;
 
 import dozun.game.entities.WalletEntity;
 import dozun.game.repositories.WalletRepository;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -28,9 +29,12 @@ import java.util.*;
 
 
 @RestController
-@RequestMapping("api/v1/auth")
 @RequiredArgsConstructor
-@CrossOrigin(origins = {"http://localhost:8080"})
+@CrossOrigin
+@Tag(name = "Auth")
+//@Api(tags="Auth")
+@RequestMapping("api/v1/auth")
+//@CrossOrigin(origins = {"http://localhost:8080"})
 //@CrossOrigin(origins = "*")
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
@@ -56,7 +60,7 @@ public class AuthenticationController {
 
     @GetMapping("/getAllUser")
     public List<UserEntity> getAllUser() {
-        return userService.getAllUser();
+        return userService. getAllUser();
     }
 
     @PostMapping("/login")
@@ -92,7 +96,7 @@ public class AuthenticationController {
         );
 
         Set<RoleEntity> roleEntities = new HashSet<>();
-        RoleEntity userRole = roleRepository.findByName("USER");
+        RoleEntity userRole = roleRepository.findRoleByName("USER");
         roleEntities.add(userRole);
         user.setRoles(roleEntities);
 
