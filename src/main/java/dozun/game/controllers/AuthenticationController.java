@@ -139,46 +139,46 @@ public class AuthenticationController {
 //        return ResponseEntity.ok(authenticationService.authenticate(authenticationRequest));
 //    }
 
-    @GetMapping("/getUserInfo")
-    public UserDTO InfoUser(@RequestHeader("Authorization") String token) {
+//    @GetMapping("/getUserInfo")
+//    public UserDTO InfoUser(@RequestHeader("Authorization") String token) {
+//
+//        String username = jwtService.extractTokenToGetUser(token.substring(7));
+//        List<String> roles = jwtService.extractTokenToGetRoles(token.substring(7));
+//        Optional<UserEntity> user = userRepository.findByUsernameAndStatusTrue(username);
+//        UserDTO userDTO = new UserDTO();
+//        userDTO.setFullName(user.get().getFullName());
+//        userDTO.setEmail(user.get().getEmail());
+//        userDTO.setId(user.get().getId());
+//        userDTO.setPassword(user.get().getPassword());
+//        userDTO.setRoles(roles);
+//        userDTO.setUsername(user.get().getUsername());
+//        return userDTO;
+//
+//    }
 
-        String username = jwtService.extractTokenToGetUser(token.substring(7));
-        List<String> roles = jwtService.extractTokenToGetRoles(token.substring(7));
-        Optional<UserEntity> user = userRepository.findByUsernameAndStatusTrue(username);
-        UserDTO userDTO = new UserDTO();
-        userDTO.setFullName(user.get().getFullName());
-        userDTO.setEmail(user.get().getEmail());
-        userDTO.setId(user.get().getId());
-        userDTO.setPassword(user.get().getPassword());
-        userDTO.setRoles(roles);
-        userDTO.setUsername(user.get().getUsername());
-        return userDTO;
-
-    }
-
-    @GetMapping("/refreshToken")
-    public ResponseEntity<?> getNewToken(@RequestHeader("Authorization") String refreshToken) {
-        String username = jwtService.extractTokenToGetUser(refreshToken.substring(7));
-        if (username != null) {
-            UserEntity user = userRepository.findByUsernameAndStatusTrue(username).orElseThrow();
-            List<RoleEntity> role = null;
-            if (user != null) {
-                role = roleCustomRepo.getRole(user);
-            }
-            Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-            Set<RoleEntity> set = new HashSet<>();
-            role.stream().forEach(c -> set.add(new RoleEntity(c.getName())));
-            user.setRoles(set);
-            set.stream().forEach(i -> authorities.add(new SimpleGrantedAuthority(i.getName())));
-            var jwtToken = jwtService.generateToken(user, authorities);
-            AuthenticationResponse authenticationResponse = new AuthenticationResponse();
-            authenticationResponse.setToken(jwtToken);
-            authenticationResponse.setRefreshToken(refreshToken.substring(7));
-            return ResponseEntity.ok(authenticationResponse);
-        }
-        return ResponseEntity.badRequest().body(new MessageResponse("Can not have new token!!!"));
-
-    }
+//    @GetMapping("/refreshToken")
+//    public ResponseEntity<?> getNewToken(@RequestHeader("Authorization") String refreshToken) {
+//        String username = jwtService.extractTokenToGetUser(refreshToken.substring(7));
+//        if (username != null) {
+//            UserEntity user = userRepository.findByUsernameAndStatusTrue(username).orElseThrow();
+//            List<RoleEntity> role = null;
+//            if (user != null) {
+//                role = roleCustomRepo.getRole(user);
+//            }
+//            Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+//            Set<RoleEntity> set = new HashSet<>();
+//            role.stream().forEach(c -> set.add(new RoleEntity(c.getName())));
+//            user.setRoles(set);
+//            set.stream().forEach(i -> authorities.add(new SimpleGrantedAuthority(i.getName())));
+//            var jwtToken = jwtService.generateToken(user, authorities);
+//            AuthenticationResponse authenticationResponse = new AuthenticationResponse();
+//            authenticationResponse.setToken(jwtToken);
+//            authenticationResponse.setRefreshToken(refreshToken.substring(7));
+//            return ResponseEntity.ok(authenticationResponse);
+//        }
+//        return ResponseEntity.badRequest().body(new MessageResponse("Can not have new token!!!"));
+//
+//    }
 //   @GetMapping("/logout")
 //public ResponseEntity<String> logout(@RequestHeader("Authorization") String authorizationHeader) {
 //       String token = authorizationHeader.substring(7);
