@@ -58,10 +58,10 @@ public class AuthenticationController {
     @Autowired
     RoleCustomRepository roleCustomRepo;
 
-    @GetMapping("/getAllUser")
-    public List<UserEntity> getAllUser() {
-        return userService. getAllUser();
-    }
+//    @GetMapping("/getAllUser")
+//    public List<UserEntity> getAllUser() {
+//        return userService. getAllUser();
+//    }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthenticationRequest authenticationRequest) {

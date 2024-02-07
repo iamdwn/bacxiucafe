@@ -83,8 +83,8 @@ public class GameDetailService {
 
         Double sumMaxOfUser = gameDetailRepository.getSumMaxByUserAndGame(userEntity.get(), gameEntity.get(), BetType.TAI);
         Double sumMinOfUser = gameDetailRepository.getSumMinByUserAndGame(userEntity.get(), gameEntity.get(), BetType.XIU);
-        Double sumMaxOfAll = gameDetailRepository.getSumMaxByAllUserAndGame(gameEntity.get(), BetType.XIU);
-        Double sumMinOfAll = gameDetailRepository.getSumMinByAllUserAndGame(gameEntity.get(), BetType.XIU);
+//        Double sumMaxOfAll = gameDetailRepository.getSumMaxByAllUserAndGame(gameEntity.get(), BetType.TAI);
+//        Double sumMinOfAll = gameDetailRepository.getSumMinByAllUserAndGame(gameEntity.get(), BetType.XIU);
 
         return new BetResponse(
                 gameDetailEntity.getUser().getUsername(),
@@ -92,9 +92,9 @@ public class GameDetailService {
                 gameDetailEntity.getBetType().name(),
                 gameDetailEntity.getGameResult(),
                 sumMaxOfUser,
-                sumMinOfUser,
-                sumMaxOfAll,
-                sumMinOfAll
+                sumMinOfUser
+//                sumMaxOfAll,
+//                sumMinOfAll
         );
     }
 

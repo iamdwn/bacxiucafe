@@ -3,11 +3,14 @@ package dozun.game.services;
 import dozun.game.enums.BetType;
 import dozun.game.enums.Duration;
 import dozun.game.entities.GameEntity;
+import dozun.game.payloads.responses.GameResponse;
+import dozun.game.repositories.GameDetailRepository;
 import dozun.game.repositories.GameRepository;
 import dozun.game.models.DiceResult;
 import dozun.game.utils.GameGenerator;
 import dozun.game.utils.RandomNumberGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -23,16 +26,19 @@ public class GameService {
     private BetType betType;
     private GameRepository gameRepository;
     private Duration duration;
-
+    private final SimpMessagingTemplate messagingTemplate;
+    private GameDetailRepository gameDetailRepository;
     private ScheduledExecutorService scheduler;
     private ScheduledExecutorService scheLockBet;
     private AtomicInteger counter;
 
     @Autowired
-    public GameService(GameGenerator gameGenerator, RandomNumberGenerator randomNumberGenerator, GameRepository gameRepository, AtomicInteger counter, ScheduledExecutorService scheduler, ScheduledExecutorService scheLockBet) {
+    public GameService(GameGenerator gameGenerator, RandomNumberGenerator randomNumberGenerator, GameRepository gameRepository, AtomicInteger counter, SimpMessagingTemplate messagingTemplate, GameDetailRepository gameDetailRepository, ScheduledExecutorService scheduler, ScheduledExecutorService scheLockBet) {
         this.gameGenerator = gameGenerator;
         this.randomNumberGenerator = randomNumberGenerator;
         this.gameRepository = gameRepository;
+        this.messagingTemplate = messagingTemplate;
+        this.gameDetailRepository = gameDetailRepository;
         this.scheduler = scheduler;
         this.scheLockBet = scheLockBet;
         this.counter = new AtomicInteger(0);
@@ -61,10 +67,12 @@ public class GameService {
 //}
 
     public void start() {
-        scheduler.scheduleAtFixedRate(this::generate,0, 5, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(this::generate, 0, 5, TimeUnit.SECONDS);
     }
 
     private void generate() {
+        Double sumMaxOfAll = 0D;
+        Double sumMinOfAll = 0D;
         DiceResult diceResult = gameGenerator.getGame();
         BetType gameType = checkGameType(diceResult);
         GameEntity gameEntity = new GameEntity(
@@ -81,6 +89,17 @@ public class GameService {
         }, 3, TimeUnit.SECONDS);
 //        scheLockBet.shutdown();
         gameRepository.save(gameEntity);
+        if (!gameDetailRepository.findAllByGame(gameEntity).isEmpty()
+                || !(gameDetailRepository.findAllByGame(gameEntity) == null)) {
+            sumMaxOfAll = gameDetailRepository.getSumMaxByAllUserAndGame(gameEntity, BetType.TAI);
+            sumMinOfAll = gameDetailRepository.getSumMinByAllUserAndGame(gameEntity, BetType.XIU);
+        }
+        messagingTemplate.convertAndSend("/topic/game",
+                new GameResponse(
+                        diceResult,
+                        sumMaxOfAll,
+                        sumMinOfAll
+                ));
     }
 
     private void lockBet(GameEntity gameEntity) {

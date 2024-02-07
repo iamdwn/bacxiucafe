@@ -21,7 +21,7 @@ public class BetResponse {
 
     private Double amountMinOfUser;
 
-    private Double amountMaxOfAll;
-
-    private Double amountMinOfAll;
+//    private Double amountMaxOfAll;
+//
+//    private Double amountMinOfAll;
 }

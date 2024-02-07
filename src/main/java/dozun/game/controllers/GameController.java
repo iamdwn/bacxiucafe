@@ -19,13 +19,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/v1/game")
 public class GameController {
     private GameService gameService;
-    private final SimpMessagingTemplate messagingTemplate;
     private GameRepository gameRepository;
 
     @Autowired
-    public GameController(GameService gameService, GameRepository gameRepository, SimpMessagingTemplate messagingTemplate) {
+    public GameController(GameService gameService, GameRepository gameRepository) {
         this.gameService = gameService;
-        this.messagingTemplate = messagingTemplate;
         this.gameRepository = gameRepository;
     }
 

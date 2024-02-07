@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -31,13 +32,16 @@ public interface GameDetailRepository extends JpaRepository<GameDetailEntity, Lo
                                   @Param("betType") BetType betType);
 
     @Query("SELECT SUM(gde.betAmount) FROM GameDetailEntity gde JOIN GameEntity ge ON ge.id = gde.game.id " +
-            "WHERE gde.user =:user AND gde.game =:game AND ge.status = true AND gde.betType = :betType")
+            "WHERE gde.game =:game AND ge.status = true AND gde.betType = :betType")
     Double getSumMaxByAllUserAndGame(@Param("game") GameEntity game,
                                      @Param("betType") BetType betType);
 
     @Query("SELECT SUM(gde.betAmount) FROM GameDetailEntity gde JOIN GameEntity ge ON ge.id = gde.game.id " +
-            "WHERE gde.user =:user AND gde.game =:game AND ge.status = true AND gde.betType = :betType")
+            "WHERE gde.game =:game AND ge.status = true AND gde.betType = :betType")
     Double getSumMinByAllUserAndGame(@Param("game") GameEntity game,
                                      @Param("betType") BetType betType);
 
+    @Query("SELECT gde FROM GameDetailEntity gde JOIN GameEntity ge ON ge.id = gde.game.id " +
+            "WHERE gde.game =:game AND ge.status = true")
+    List<GameDetailEntity> findAllByGame(@Param("game") GameEntity game);
 }
