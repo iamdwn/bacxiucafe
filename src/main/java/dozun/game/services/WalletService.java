@@ -25,9 +25,9 @@ public class WalletService {
         Optional<UserEntity> userEntity = userRepository.findByUsernameAndStatusTrue(walletDTO.getUsername());
         Optional<WalletEntity> walletEntity = walletRepository.findByUser(userEntity.get());
 
-        if (!userEntity.isPresent()) throw new RuntimeException("not found user - charged failed");
+        if (!userEntity.isPresent()) throw new RuntimeException("not found user");
 
-        if (!walletEntity.isPresent()) throw new RuntimeException("not found user - charged failed");
+        if (!walletEntity.isPresent()) throw new RuntimeException("not found user");
 
         walletEntity.get().setBalance(walletEntity.get().getBalance() + walletDTO.getChargeAmount());
 

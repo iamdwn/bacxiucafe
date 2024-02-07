@@ -24,10 +24,11 @@ public class GameDetailController {
         this.gameDetailService = gameDetailService;
     }
 
-    @PostMapping("/bet")
-    public ResponseEntity<ResponseObject> bet(@RequestHeader("Authorization") String token,
+    @PostMapping("/bet/{Authorization}")
+    public ResponseEntity<ResponseObject> bet(@PathVariable(name = "Authorization", required = true) String token,
                                               @RequestBody BetRequest betDTO) {
         try {
+            token = "Bearer " + token;
             if (TokenChecker.checkToken(token)) {
                 return ResponseEntity.status(HttpStatus.OK)
                         .body(new ResponseObject(ResponseStatus.SUCCESS, "success", gameDetailService.bet(betDTO, false)));
@@ -40,10 +41,11 @@ public class GameDetailController {
         }
     }
 
-    @PostMapping("/bet/all")
-    public ResponseEntity<ResponseObject> betAll(@RequestHeader("Authorization") String token,
+    @PostMapping("/bet/all/{Authorization}")
+    public ResponseEntity<ResponseObject> betAll(@PathVariable(name = "Authorization", required = true) String token,
                                                  @RequestBody BetRequest betDTO) {
         try {
+            token = "Bearer " + token;
             if (TokenChecker.checkToken(token)) {
                 return ResponseEntity.status(HttpStatus.OK)
                         .body(new ResponseObject(ResponseStatus.SUCCESS, "success", gameDetailService.bet(betDTO, true)));

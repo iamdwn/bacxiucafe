@@ -13,17 +13,17 @@ public class RandomNumberGenerator {
     private static int dice3;
     private Random random = new Random();
 
-    @Scheduled(fixedRate = 3000)
+    @Scheduled(fixedRate = 5000)
     public void generateDice1() {
         dice1 = random.nextInt(6) + 1;
     }
 
-    @Scheduled(fixedRate = 3000)
+    @Scheduled(fixedRate = 5000)
     public void generateDice2() {
         dice2 = random.nextInt(6) + 1;
     }
 
-    @Scheduled(fixedRate = 3000)
+    @Scheduled(fixedRate = 5000)
     public void generateDice3() {
         dice3 = random.nextInt(6) + 1;
     }

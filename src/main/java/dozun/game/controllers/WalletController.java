@@ -25,10 +25,11 @@ public class WalletController {
         this.walletService = walletService;
     }
 
-    @PostMapping("/charge")
-    public ResponseEntity<ResponseObject> bet(@RequestHeader("Authorization") String token,
+    @PostMapping("/charge/{Authorization}")
+    public ResponseEntity<ResponseObject> bet(@PathVariable(name = "Authorization", required = true) String token,
                                               @Valid @RequestBody WalletDTO walletDTO){
         try {
+            token = "Bearer " + token;
             if (TokenChecker.checkToken(token)) {
                 walletService.charge(walletDTO);
                 return ResponseEntity.status(HttpStatus.OK)
@@ -38,7 +39,7 @@ public class WalletController {
                     .body(new ResponseObject(dozun.game.enums.ResponseStatus.BAD_REQUEST, "failed", "charge failed"));
         } catch (RuntimeException ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ResponseObject(ResponseStatus.BAD_REQUEST, ex.getMessage(), ""));
+                    .body(new ResponseObject(ResponseStatus.BAD_REQUEST, ex.getMessage(), "charge failed"));
         }
     }
 }

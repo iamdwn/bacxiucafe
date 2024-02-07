@@ -1,6 +1,5 @@
 package dozun.game.controllers;
 
-import dozun.game.entities.GameEntity;
 import dozun.game.enums.ResponseStatus;
 import dozun.game.models.ResponseObject;
 import dozun.game.repositories.GameRepository;
@@ -12,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @CrossOrigin
@@ -32,9 +29,10 @@ public class GameController {
         this.gameRepository = gameRepository;
     }
 
-    @GetMapping("/start")
-    public ResponseEntity<ResponseObject> generate(@RequestHeader("Authorization") String token) {
+    @GetMapping("/start/{Authorization}")
+    public ResponseEntity<ResponseObject> generate(@PathVariable(name = "Authorization", required = true) String token) {
         try {
+            token = "Bearer " + token;
             if (TokenChecker.checkToken(token)) {
                 gameService.start();
                 return ResponseEntity.status(HttpStatus.OK)
