@@ -68,9 +68,6 @@ public class GameService {
 
     public void start() {
         scheduler.scheduleAtFixedRate(this::generate, 0, 17, TimeUnit.SECONDS);
-        scheduledExecutor.schedule(() -> {
-            getCountdown();
-        }, 1, TimeUnit.SECONDS);
     }
 
     private void generate() {
@@ -89,6 +86,8 @@ public class GameService {
                 true,
                 Duration.valueOf("GAME_DURATION").getDur()
         );
+
+        scheduler.scheduleAtFixedRate(this::getCountdown, 0, 1, TimeUnit.SECONDS);
 
         scheduledExecutor.schedule(() -> {
             lockBet(gameEntity);
@@ -120,7 +119,8 @@ public class GameService {
         if (second > 0)
             second--;
         else
-            scheduledExecutor.schedule(this::resetTime, Duration.valueOf("GAME_DURATION").getDur(), TimeUnit.SECONDS);
+//            scheduledExecutor.schedule(this::resetTime, Duration.valueOf("GAME_DURATION").getDur() + 2, TimeUnit.SECONDS);
+            resetTime();
     }
 
     public void resetTime() {

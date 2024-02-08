@@ -3,6 +3,8 @@ package dozun.game.services;
 import dozun.game.payloads.dtos.WalletDTO;
 import dozun.game.entities.UserEntity;
 import dozun.game.entities.WalletEntity;
+import dozun.game.payloads.requests.WalletRequest;
+import dozun.game.payloads.responses.WalletResponse;
 import dozun.game.repositories.UserRepository;
 import dozun.game.repositories.WalletRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,5 +34,19 @@ public class WalletService {
         walletEntity.get().setBalance(walletEntity.get().getBalance() + walletDTO.getChargeAmount());
 
         walletRepository.save(walletEntity.get());
+    }
+
+    public WalletResponse getWallet(WalletRequest walletRequest) {
+        Optional<UserEntity> userEntity = userRepository.findByUsernameAndStatusTrue(walletRequest.getUsername());
+        Optional<WalletEntity> walletEntity = walletRepository.findByUser(userEntity.get());
+
+        if (!userEntity.isPresent()) throw new RuntimeException("not found user");
+
+        if (!walletEntity.isPresent()) throw new RuntimeException("not found user");
+
+        return new WalletResponse(
+                walletRequest.getUsername(),
+                userEntity.get().getWallet().getBalance()
+        );
     }
 }

@@ -50,7 +50,6 @@ public class GameController {
         try {
             token = "Bearer " + token;
             if (TokenChecker.checkToken(token)) {
-                gameService.getCountdown();
                 return ResponseEntity.status(HttpStatus.OK)
                         .body(new ResponseObject(dozun.game.enums.ResponseStatus.SUCCESS, "game is starting", gameService.getCurrentSecond()));
             }
