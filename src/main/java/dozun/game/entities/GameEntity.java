@@ -48,10 +48,13 @@ public class GameEntity {
     private Date gameStart;
 
     @Column
-    private int duration;
+    private Long duration;
 
     @Column
     private Boolean status;
+
+    @Column
+    private Long countdown;
 
     public GameEntity(List<GameDetailEntity> games, List<UserEntity> users) {
         this.games = games;
@@ -67,7 +70,7 @@ public class GameEntity {
         this.type = type;
     }
 
-    public GameEntity(int dice1, int dice2, int dice3, BetType type, Date gameStart, int duration, Boolean status) {
+    public GameEntity(int dice1, int dice2, int dice3, BetType type, Date gameStart, Long duration, Boolean status, Long countdown) {
         this.dice1 = dice1;
         this.dice2 = dice2;
         this.dice3 = dice3;
@@ -75,5 +78,6 @@ public class GameEntity {
         this.gameStart = gameStart;
         this.duration = duration;
         this.status = status;
+        this.countdown = countdown;
     }
 }

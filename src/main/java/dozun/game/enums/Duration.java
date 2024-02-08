@@ -2,15 +2,15 @@ package dozun.game.enums;
 
 
 public enum Duration {
-    GAME_DURATION(5),
-    BET_LOCKED_DURATION(2);
-    private int dur;
+    GAME_DURATION(15L),
+    BET_LOCKED_DURATION(5L);
+    private Long dur;
 
-    private Duration(int dur) {
+    private Duration(Long dur) {
         this.dur = dur;
     }
 
-    public int getDur() {
+    public Long getDur() {
         return dur;
     }
 }

@@ -3,17 +3,19 @@ package dozun.game.services;
 import dozun.game.enums.BetType;
 import dozun.game.enums.Duration;
 import dozun.game.entities.GameEntity;
+import dozun.game.enums.GameStatus;
 import dozun.game.payloads.responses.GameResponse;
 import dozun.game.repositories.GameDetailRepository;
 import dozun.game.repositories.GameRepository;
 import dozun.game.models.DiceResult;
 import dozun.game.utils.GameGenerator;
-import dozun.game.utils.RandomNumberGenerator;
+import dozun.game.utils.ScheduleExecutor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Optional;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -22,28 +24,26 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class GameService {
 
     private GameGenerator gameGenerator;
-    private RandomNumberGenerator randomNumberGenerator;
+    private ScheduleExecutor scheduleExecutor;
     private BetType betType;
     private GameRepository gameRepository;
     private Duration duration;
     private final SimpMessagingTemplate messagingTemplate;
     private GameDetailRepository gameDetailRepository;
     private ScheduledExecutorService scheduler;
-    private ScheduledExecutorService scheLockBet;
-    private AtomicInteger counter;
+    private ScheduledExecutorService scheduledExecutor;
+    private Long second = Duration.valueOf("GAME_DURATION").getDur();
 
     @Autowired
-    public GameService(GameGenerator gameGenerator, RandomNumberGenerator randomNumberGenerator, GameRepository gameRepository, AtomicInteger counter, SimpMessagingTemplate messagingTemplate, GameDetailRepository gameDetailRepository, ScheduledExecutorService scheduler, ScheduledExecutorService scheLockBet) {
+    public GameService(GameGenerator gameGenerator, ScheduleExecutor scheduleExecutor, GameRepository gameRepository, SimpMessagingTemplate messagingTemplate, GameDetailRepository gameDetailRepository, ScheduledExecutorService scheduler, ScheduledExecutorService scheduledExecutor) {
         this.gameGenerator = gameGenerator;
-        this.randomNumberGenerator = randomNumberGenerator;
+        this.scheduleExecutor = scheduleExecutor;
         this.gameRepository = gameRepository;
         this.messagingTemplate = messagingTemplate;
         this.gameDetailRepository = gameDetailRepository;
         this.scheduler = scheduler;
-        this.scheLockBet = scheLockBet;
-        this.counter = new AtomicInteger(0);
+        this.scheduledExecutor = scheduledExecutor;
     }
-
 
 //    public DiceResult start() {
 //        Timer timer = new Timer();
@@ -67,13 +67,17 @@ public class GameService {
 //}
 
     public void start() {
-        scheduler.scheduleAtFixedRate(this::generate, 0, 5, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(this::generate, 0, 17, TimeUnit.SECONDS);
+        scheduledExecutor.schedule(() -> {
+            getCountdown();
+        }, 1, TimeUnit.SECONDS);
     }
 
     private void generate() {
         Double sumMaxOfAll = 0D;
         Double sumMinOfAll = 0D;
         DiceResult diceResult = gameGenerator.getGame();
+
         BetType gameType = checkGameType(diceResult);
         GameEntity gameEntity = new GameEntity(
                 diceResult.getDice1(),
@@ -82,29 +86,49 @@ public class GameService {
                 gameType,
                 new Date(),
                 Duration.valueOf("GAME_DURATION").getDur(),
-                true
+                true,
+                Duration.valueOf("GAME_DURATION").getDur()
         );
-        scheLockBet.schedule(() -> {
+
+        scheduledExecutor.schedule(() -> {
             lockBet(gameEntity);
-        }, 3, TimeUnit.SECONDS);
-//        scheLockBet.shutdown();
+        }, Duration.valueOf("GAME_DURATION").getDur() - Duration.BET_LOCKED_DURATION.getDur(), TimeUnit.SECONDS);
+
+        scheduledExecutor.scheduleAtFixedRate(() -> {
+            countdown(gameEntity);
+        }, 1, 1, TimeUnit.SECONDS);
+
         gameRepository.save(gameEntity);
-        if (!gameDetailRepository.findAllByGame(gameEntity).isEmpty()
-                || !(gameDetailRepository.findAllByGame(gameEntity) == null)) {
-            sumMaxOfAll = gameDetailRepository.getSumMaxByAllUserAndGame(gameEntity, BetType.TAI);
-            sumMinOfAll = gameDetailRepository.getSumMinByAllUserAndGame(gameEntity, BetType.XIU);
-        }
+
         messagingTemplate.convertAndSend("/topic/game",
-                new GameResponse(
-                        diceResult,
-                        sumMaxOfAll,
-                        sumMinOfAll
-                ));
+                getCurrentGame());
     }
 
     private void lockBet(GameEntity gameEntity) {
         gameEntity.setStatus(false);
         gameRepository.save(gameEntity);
+    }
+
+    private void countdown(GameEntity gameEntity) {
+        if (gameEntity.getCountdown() > 0) {
+            gameEntity.setCountdown(gameEntity.getCountdown() - 1);
+            gameRepository.save(gameEntity);
+        }
+    }
+
+    public void getCountdown() {
+        if (second > 0)
+            second--;
+        else
+            scheduledExecutor.schedule(this::resetTime, Duration.valueOf("GAME_DURATION").getDur(), TimeUnit.SECONDS);
+    }
+
+    public void resetTime() {
+        second = Duration.valueOf("GAME_DURATION").getDur();
+    }
+
+    public Long getCurrentSecond() {
+        return second;
     }
 
     public BetType checkGameType(DiceResult diceResult) {
@@ -119,5 +143,31 @@ public class GameService {
 
         if (total < 11) return BetType.XIU;
         return BetType.TAI;
+    }
+
+    public GameResponse getCurrentGame() {
+        Double sumMaxOfAll = 0D;
+        Double sumMinOfAll = 0D;
+        Optional<GameEntity> gameEntity = gameRepository.findFirstByStatusOrderByGameStartDesc();
+        if (!gameDetailRepository.findAllByGame(gameEntity.get()).isEmpty()
+                && !(gameDetailRepository.findAllByGame(gameEntity.get()) == null)) {
+            sumMaxOfAll = gameDetailRepository.getSumMaxByAllUserAndGame(gameEntity.get(), BetType.TAI);
+            sumMinOfAll = gameDetailRepository.getSumMinByAllUserAndGame(gameEntity.get(), BetType.XIU);
+        }
+        DiceResult diceResult = new DiceResult(
+                gameEntity.get().getDice1(),
+                gameEntity.get().getDice2(),
+                gameEntity.get().getDice3()
+        );
+
+        return new GameResponse(
+                diceResult,
+                sumMaxOfAll,
+                sumMinOfAll,
+                gameEntity.get().getStatus() ? GameStatus.STARTING.name()
+                        : !(gameEntity.get().getCountdown() == 0)
+                        ? GameStatus.BET_LOCKED.name()
+                        : GameStatus.CLOSED.name()
+        );
     }
 }

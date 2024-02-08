@@ -63,7 +63,7 @@ public class AuthenticationController {
 //        return userService. getAllUser();
 //    }
 
-    @PostMapping("/login")
+    @PostMapping("/signin")
     public ResponseEntity<?> login(@RequestBody AuthenticationRequest authenticationRequest) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
