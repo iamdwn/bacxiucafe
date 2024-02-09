@@ -67,12 +67,11 @@ public class GameService {
 //}
 
     public void start() {
-        scheduler.scheduleAtFixedRate(this::generate, 0, 17, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(this::generate, 0, 33, TimeUnit.SECONDS);
     }
 
     private void generate() {
-        Double sumMaxOfAll = 0D;
-        Double sumMinOfAll = 0D;
+
         DiceResult diceResult = gameGenerator.getGame();
 
         BetType gameType = checkGameType(diceResult);
@@ -87,7 +86,9 @@ public class GameService {
                 Duration.valueOf("GAME_DURATION").getDur()
         );
 
-        scheduler.scheduleAtFixedRate(this::getCountdown, 0, 1, TimeUnit.SECONDS);
+        scheduledExecutor.schedule(() -> {
+            resetTime();
+        }, 33, TimeUnit.SECONDS);
 
         scheduledExecutor.schedule(() -> {
             lockBet(gameEntity);
@@ -111,16 +112,9 @@ public class GameService {
     private void countdown(GameEntity gameEntity) {
         if (gameEntity.getCountdown() > 0) {
             gameEntity.setCountdown(gameEntity.getCountdown() - 1);
+            second = (second > 0) ? gameEntity.getCountdown() - 1 : 0;
             gameRepository.save(gameEntity);
         }
-    }
-
-    public void getCountdown() {
-        if (second > 0)
-            second--;
-        else
-//            scheduledExecutor.schedule(this::resetTime, Duration.valueOf("GAME_DURATION").getDur() + 2, TimeUnit.SECONDS);
-            resetTime();
     }
 
     public void resetTime() {
@@ -167,7 +161,8 @@ public class GameService {
                 gameEntity.get().getStatus() ? GameStatus.STARTING.name()
                         : !(gameEntity.get().getCountdown() == 0)
                         ? GameStatus.BET_LOCKED.name()
-                        : GameStatus.CLOSED.name()
+                        : GameStatus.CLOSED.name(),
+                second
         );
     }
 }

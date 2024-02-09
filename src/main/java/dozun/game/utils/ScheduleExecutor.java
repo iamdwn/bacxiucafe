@@ -17,17 +17,17 @@ public class ScheduleExecutor {
     private static int dice3;
     private Random random = new Random();
 
-    @Scheduled(fixedRate = 17000)
+    @Scheduled(fixedRate = 33000)
     public void generateDice1() {
         dice1 = random.nextInt(6) + 1;
     }
 
-    @Scheduled(fixedRate = 17000)
+    @Scheduled(fixedRate = 33000)
     public void generateDice2() {
         dice2 = random.nextInt(6) + 1;
     }
 
-    @Scheduled(fixedRate = 17000)
+    @Scheduled(fixedRate = 33000)
     public void generateDice3() {
         dice3 = random.nextInt(6) + 1;
     }

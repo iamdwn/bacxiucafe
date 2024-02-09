@@ -14,4 +14,5 @@ public class GameResponse {
     private Double amountMaxOfAll;
     private Double amountMinOfAll;
     private String gameStatus;
+    private Long second;
 }

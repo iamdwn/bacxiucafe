@@ -7,6 +7,7 @@ import dozun.game.payloads.requests.WalletRequest;
 import dozun.game.services.WalletService;
 import dozun.game.utils.TokenChecker;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,11 +27,11 @@ public class WalletController {
         this.walletService = walletService;
     }
 
-    @PostMapping("/charge/{Authorization}")
-    public ResponseEntity<ResponseObject> bet(@PathVariable(name = "Authorization", required = true) String token,
+    @PostMapping("/charge")
+    public ResponseEntity<ResponseObject> bet(HttpServletRequest request,
                                               @Valid @RequestBody WalletDTO walletDTO) {
         try {
-            token = "Bearer " + token;
+            String token = request.getHeader("Authorization");
             if (TokenChecker.checkToken(token)) {
                 walletService.charge(walletDTO);
                 return ResponseEntity.status(HttpStatus.OK)
@@ -44,11 +45,11 @@ public class WalletController {
         }
     }
 
-    @GetMapping("/{Authorization}")
-    public ResponseEntity<ResponseObject> getWallet(@PathVariable(name = "Authorization", required = true) String token,
+    @GetMapping
+    public ResponseEntity<ResponseObject> getWallet(HttpServletRequest request,
                                                     @Valid @RequestBody WalletRequest walletRequest) {
         try {
-            token = "Bearer " + token;
+            String token = request.getHeader("Authorization");
             if (TokenChecker.checkToken(token)) {
                 return ResponseEntity.status(HttpStatus.OK)
                         .body(new ResponseObject(dozun.game.enums.ResponseStatus.SUCCESS, "success", walletService.getWallet(walletRequest)));

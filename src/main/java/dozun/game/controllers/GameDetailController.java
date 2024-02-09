@@ -6,6 +6,7 @@ import dozun.game.models.ResponseObject;
 import dozun.game.services.GameDetailService;
 import dozun.game.utils.TokenChecker;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,11 +25,11 @@ public class GameDetailController {
         this.gameDetailService = gameDetailService;
     }
 
-    @PostMapping("/bet/{Authorization}")
-    public ResponseEntity<ResponseObject> bet(@PathVariable(name = "Authorization", required = true) String token,
+    @PostMapping("/bet")
+    public ResponseEntity<ResponseObject> bet(HttpServletRequest request,
                                               @RequestBody BetRequest betDTO) {
         try {
-            token = "Bearer " + token;
+            String token = request.getHeader("Authorization");
             if (TokenChecker.checkToken(token)) {
                 return ResponseEntity.status(HttpStatus.OK)
                         .body(new ResponseObject(ResponseStatus.SUCCESS, "success", gameDetailService.bet(betDTO, false)));
@@ -41,11 +42,11 @@ public class GameDetailController {
         }
     }
 
-    @PostMapping("/bet/all/{Authorization}")
-    public ResponseEntity<ResponseObject> betAll(@PathVariable(name = "Authorization", required = true) String token,
+    @PostMapping("/bet/all")
+    public ResponseEntity<ResponseObject> betAll(HttpServletRequest request,
                                                  @RequestBody BetRequest betDTO) {
         try {
-            token = "Bearer " + token;
+            String token = request.getHeader("Authorization");
             if (TokenChecker.checkToken(token)) {
                 return ResponseEntity.status(HttpStatus.OK)
                         .body(new ResponseObject(ResponseStatus.SUCCESS, "success", gameDetailService.bet(betDTO, true)));

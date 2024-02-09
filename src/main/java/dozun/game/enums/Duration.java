@@ -2,7 +2,7 @@ package dozun.game.enums;
 
 
 public enum Duration {
-    GAME_DURATION(15L),
+    GAME_DURATION(30L),
     BET_LOCKED_DURATION(5L);
     private Long dur;
 
