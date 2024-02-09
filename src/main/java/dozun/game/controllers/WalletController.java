@@ -28,7 +28,7 @@ public class WalletController {
     }
 
     @PostMapping("/charge")
-    public ResponseEntity<ResponseObject> bet(HttpServletRequest request,
+    public ResponseEntity<ResponseObject> charge(HttpServletRequest request,
                                               @Valid @RequestBody WalletDTO walletDTO) {
         try {
             String token = request.getHeader("Authorization");
