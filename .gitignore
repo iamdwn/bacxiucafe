@@ -19,6 +19,9 @@ target/
 *.iml
 *.ipr
 
+### SpringBoot ###
+/src/main/resources/application.properties
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
@@ -27,6 +30,7 @@ target/
 /.nb-gradle/
 build/
 !**/src/main/**/build/
+!**/src/test/**/build/
 !**/src/test/**/build/
 
 ### VS Code ###
