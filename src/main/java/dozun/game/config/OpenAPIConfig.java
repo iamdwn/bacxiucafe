@@ -21,6 +21,4 @@ import org.springframework.context.annotation.Configuration;
         scheme = "bearer"
 )
 
-public class OpenAPIConfig {
-
-}
+public class OpenAPIConfig { }
