@@ -96,12 +96,11 @@ public class GameService {
 
         scheduledExecutor.scheduleAtFixedRate(() -> {
             countdown(gameEntity);
+            messagingTemplate.convertAndSend("/topic/game",
+                    getCurrentGame());
         }, 1, 1, TimeUnit.SECONDS);
 
         gameRepository.save(gameEntity);
-
-        messagingTemplate.convertAndSend("/topic/game",
-                getCurrentGame());
     }
 
     private void lockBet(GameEntity gameEntity) {

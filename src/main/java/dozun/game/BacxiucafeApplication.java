@@ -13,5 +13,4 @@ public class BacxiucafeApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(BacxiucafeApplication.class, args);
 	}
-
 }
