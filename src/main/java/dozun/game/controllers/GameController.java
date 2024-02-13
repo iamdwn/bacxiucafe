@@ -38,24 +38,24 @@ public class GameController {
         this.jwtService = jwtService;
     }
 
-    @GetMapping("/start")
-    public ResponseEntity<ResponseObject> generate(HttpServletRequest request) {
-
-        try {
-            String token = request.getHeader("Authorization");
-            if (TokenChecker.checkToken(token)) {
-//                String user = jwtService.extractTokenToGetUser(token);
-                gameService.start();
-                return ResponseEntity.status(HttpStatus.OK)
-                        .body(new ResponseObject(dozun.game.enums.ResponseStatus.SUCCESS, "game is starting", ""));
-            }
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ResponseObject(dozun.game.enums.ResponseStatus.BAD_REQUEST, "failed", "bet failed"));
-        } catch (RuntimeException ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ResponseObject(ResponseStatus.BAD_REQUEST, ex.getMessage(), ""));
-        }
-    }
+//    @GetMapping("/start")
+//    public ResponseEntity<ResponseObject> generate(HttpServletRequest request) {
+//
+//        try {
+//            String token = request.getHeader("Authorization");
+//            if (TokenChecker.checkToken(token)) {
+////                String user = jwtService.extractTokenToGetUser(token);
+//                gameService.start();
+//                return ResponseEntity.status(HttpStatus.OK)
+//                        .body(new ResponseObject(dozun.game.enums.ResponseStatus.SUCCESS, "game is starting", ""));
+//            }
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//                    .body(new ResponseObject(dozun.game.enums.ResponseStatus.BAD_REQUEST, "failed", "bet failed"));
+//        } catch (RuntimeException ex) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//                    .body(new ResponseObject(ResponseStatus.BAD_REQUEST, ex.getMessage(), ""));
+//        }
+//    }
 
     @GetMapping("/starting/countdown")
     public ResponseEntity<ResponseObject> getCountdown(HttpServletRequest request) {
