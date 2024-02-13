@@ -6,6 +6,7 @@ import dozun.game.models.ResponseObject;
 import dozun.game.payloads.requests.WalletRequest;
 import dozun.game.services.WalletService;
 import dozun.game.utils.TokenChecker;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Wallet")
 //@Api(tags="Wallet")
 @RequestMapping("/api/v1/user/wallet")
+@SecurityRequirement(name = "bearerAuth")
 public class WalletController {
     private WalletService walletService;
 

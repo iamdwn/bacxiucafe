@@ -10,21 +10,23 @@ import dozun.game.repositories.GameRepository;
 import dozun.game.models.DiceResult;
 import dozun.game.utils.GameGenerator;
 import dozun.game.utils.ScheduleExecutor;
+//import dozun.game.websocket.WebSocketSession;
+//import dozun.game.websocket.WebSocketSessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-
 import java.util.Date;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-
 @Service
 public class GameService {
 
     private GameGenerator gameGenerator;
     private ScheduleExecutor scheduleExecutor;
+
     private BetType betType;
     private GameRepository gameRepository;
     private Duration duration;
@@ -67,40 +69,45 @@ public class GameService {
 //}
 
     public void start() {
-        scheduler.scheduleAtFixedRate(this::generate, 0, 33, TimeUnit.SECONDS);
+//        scheduler.scheduleAtFixedRate(this::generate, 0, 33, TimeUnit.SECONDS);
+//        scheduler.scheduleAtFixedRate(() -> generate(user), 0, 33, TimeUnit.SECONDS);
+        generate();
     }
 
     private void generate() {
+        scheduler.scheduleAtFixedRate(() -> {
+            DiceResult diceResult = gameGenerator.getGame();
+            BetType gameType = checkGameType(diceResult);
+            GameEntity gameEntity = new GameEntity(
+                    diceResult.getDice1(),
+                    diceResult.getDice2(),
+                    diceResult.getDice3(),
+                    gameType,
+                    new Date(),
+                    Duration.valueOf("GAME_DURATION").getDur(),
+                    true,
+                    Duration.valueOf("GAME_DURATION").getDur()
+            );
+            scheduledExecutor.schedule(() -> {
+                resetTime();
+//            webSocketSession.onClose();
+            }, 33, TimeUnit.SECONDS);
 
-        DiceResult diceResult = gameGenerator.getGame();
+            scheduledExecutor.schedule(() -> {
+                lockBet(gameEntity);
+            }, Duration.valueOf("GAME_DURATION").getDur() - Duration.BET_LOCKED_DURATION.getDur(), TimeUnit.SECONDS);
 
-        BetType gameType = checkGameType(diceResult);
-        GameEntity gameEntity = new GameEntity(
-                diceResult.getDice1(),
-                diceResult.getDice2(),
-                diceResult.getDice3(),
-                gameType,
-                new Date(),
-                Duration.valueOf("GAME_DURATION").getDur(),
-                true,
-                Duration.valueOf("GAME_DURATION").getDur()
-        );
-
-        scheduledExecutor.schedule(() -> {
-            resetTime();
-        }, 33, TimeUnit.SECONDS);
-
-        scheduledExecutor.schedule(() -> {
-            lockBet(gameEntity);
-        }, Duration.valueOf("GAME_DURATION").getDur() - Duration.BET_LOCKED_DURATION.getDur(), TimeUnit.SECONDS);
+            scheduledExecutor.scheduleAtFixedRate(() -> {
+                countdown(gameEntity);
+            }, 1, 1, TimeUnit.SECONDS);
+            gameRepository.save(gameEntity);
+        },0, 33, TimeUnit.SECONDS);
 
         scheduledExecutor.scheduleAtFixedRate(() -> {
-            countdown(gameEntity);
             messagingTemplate.convertAndSend("/topic/game",
                     getCurrentGame());
         }, 1, 1, TimeUnit.SECONDS);
 
-        gameRepository.save(gameEntity);
     }
 
     private void lockBet(GameEntity gameEntity) {

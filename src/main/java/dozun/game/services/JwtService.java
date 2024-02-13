@@ -51,7 +51,7 @@ public class JwtService {
         String signature = decode(parts[2]);
         boolean exp = payload.getLong("exp") > (System.currentTimeMillis() / 1000);
         if (exp) {
-            return payload.getString("user");
+            return payload.getString("username");
         }
         return null;
     }

@@ -5,6 +5,7 @@ import dozun.game.payloads.requests.BetRequest;
 import dozun.game.models.ResponseObject;
 import dozun.game.services.GameDetailService;
 import dozun.game.utils.TokenChecker;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "GameDetail")
 //@Api(tags="GameDetail")
 @RequestMapping("api/v1/game")
+@SecurityRequirement(name = "bearerAuth")
 public class GameDetailController {
     private GameDetailService gameDetailService;
 

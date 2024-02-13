@@ -4,6 +4,7 @@ import dozun.game.enums.ResponseStatus;
 import dozun.game.models.ResponseObject;
 import dozun.game.repositories.GameRepository;
 import dozun.game.services.GameService;
+import dozun.game.services.JwtService;
 import dozun.game.utils.TokenChecker;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.socket.WebSocketSession;
 
 @RestController
 @CrossOrigin
@@ -27,11 +29,13 @@ import org.springframework.web.bind.annotation.*;
 public class GameController {
     private GameService gameService;
     private GameRepository gameRepository;
+    private JwtService jwtService;
 
     @Autowired
-    public GameController(GameService gameService, GameRepository gameRepository) {
+    public GameController(GameService gameService, GameRepository gameRepository, JwtService jwtService) {
         this.gameService = gameService;
         this.gameRepository = gameRepository;
+        this.jwtService = jwtService;
     }
 
     @GetMapping("/start")
@@ -40,6 +44,7 @@ public class GameController {
         try {
             String token = request.getHeader("Authorization");
             if (TokenChecker.checkToken(token)) {
+//                String user = jwtService.extractTokenToGetUser(token);
                 gameService.start();
                 return ResponseEntity.status(HttpStatus.OK)
                         .body(new ResponseObject(dozun.game.enums.ResponseStatus.SUCCESS, "game is starting", ""));
@@ -70,7 +75,7 @@ public class GameController {
 
 
     @Operation(description = "Get current game")
-    @GetMapping("/starting")
+    @GetMapping("/starting/status")
     public ResponseEntity<ResponseObject> getCurrentGame(HttpServletRequest request) {
         try {
             String token = request.getHeader("Authorization");
