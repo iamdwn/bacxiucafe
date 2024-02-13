@@ -89,6 +89,7 @@ public class GameService {
                     Duration.valueOf("GAME_DURATION").getDur()
             );
             scheduledExecutor.schedule(() -> {
+                gameRepository.delete(gameEntity);
                 resetTime();
 //            webSocketSession.onClose();
             }, 33, TimeUnit.SECONDS);
