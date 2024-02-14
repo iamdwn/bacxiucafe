@@ -107,6 +107,11 @@ public class GameService {
         scheduledExecutor.scheduleAtFixedRate(() -> {
             messagingTemplate.convertAndSend("/topic/game",
                     getCurrentGame());
+        }, 1, 30, TimeUnit.SECONDS);
+
+        scheduledExecutor.scheduleAtFixedRate(() -> {
+            messagingTemplate.convertAndSend("/topic/game",
+                    getCurrentSecond());
         }, 1, 1, TimeUnit.SECONDS);
 
     }
@@ -168,8 +173,8 @@ public class GameService {
                 gameEntity.get().getStatus() ? GameStatus.STARTING.name()
                         : !(gameEntity.get().getCountdown() == 0)
                         ? GameStatus.BET_LOCKED.name()
-                        : GameStatus.CLOSED.name(),
-                second
+                        : GameStatus.CLOSED.name()
+//                second
         );
     }
 }

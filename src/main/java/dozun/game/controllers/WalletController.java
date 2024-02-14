@@ -4,6 +4,7 @@ import dozun.game.payloads.dtos.WalletDTO;
 import dozun.game.enums.ResponseStatus;
 import dozun.game.models.ResponseObject;
 import dozun.game.payloads.requests.WalletRequest;
+import dozun.game.services.JwtService;
 import dozun.game.services.WalletService;
 import dozun.game.utils.TokenChecker;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -23,10 +24,12 @@ import org.springframework.web.bind.annotation.*;
 @SecurityRequirement(name = "bearerAuth")
 public class WalletController {
     private WalletService walletService;
+    private JwtService jwtService;
 
     @Autowired
-    public WalletController(WalletService walletService) {
+    public WalletController(WalletService walletService, JwtService jwtService) {
         this.walletService = walletService;
+        this.jwtService = jwtService;
     }
 
     @PostMapping("/charge")
@@ -48,19 +51,19 @@ public class WalletController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseObject> getWallet(HttpServletRequest request,
-                                                    @Valid @RequestBody WalletRequest walletRequest) {
+    public ResponseEntity<ResponseObject> getWallet(HttpServletRequest request) {
         try {
             String token = request.getHeader("Authorization");
             if (TokenChecker.checkToken(token)) {
+                String username = jwtService.extractTokenToGetUser(token);
                 return ResponseEntity.status(HttpStatus.OK)
-                        .body(new ResponseObject(dozun.game.enums.ResponseStatus.SUCCESS, "success", walletService.getWallet(walletRequest)));
+                        .body(new ResponseObject(dozun.game.enums.ResponseStatus.SUCCESS, "success", walletService.getWallet(username)));
             }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ResponseObject(dozun.game.enums.ResponseStatus.BAD_REQUEST, "failed", "charge failed"));
+                    .body(new ResponseObject(dozun.game.enums.ResponseStatus.BAD_REQUEST, "failed", "get failed"));
         } catch (RuntimeException ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ResponseObject(ResponseStatus.BAD_REQUEST, ex.getMessage(), "charge failed"));
+                    .body(new ResponseObject(ResponseStatus.BAD_REQUEST, ex.getMessage(), "get failed"));
         }
     }
 }

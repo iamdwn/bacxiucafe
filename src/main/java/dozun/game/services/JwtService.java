@@ -46,12 +46,12 @@ public class JwtService {
 
     public String extractTokenToGetUser(String token) {
         String[] parts = token.split("\\.");
-        JSONObject header = new JSONObject(decode(parts[0]));
+//        JSONObject header = new JSONObject(decode(parts[0]));
         JSONObject payload = new JSONObject(decode(parts[1]));
-        String signature = decode(parts[2]);
+//        String signature = decode(parts[2]);
         boolean exp = payload.getLong("exp") > (System.currentTimeMillis() / 1000);
         if (exp) {
-            return payload.getString("username");
+            return payload.getString("user");
         }
         return null;
     }
