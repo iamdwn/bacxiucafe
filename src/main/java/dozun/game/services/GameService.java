@@ -106,12 +106,12 @@ public class GameService {
 
         scheduledExecutor.scheduleAtFixedRate(() -> {
             messagingTemplate.convertAndSend("/topic/game",
-                    getCurrentGame());
+                    getCurrentGame(true));
         }, 1, 30, TimeUnit.SECONDS);
 
         scheduledExecutor.scheduleAtFixedRate(() -> {
             messagingTemplate.convertAndSend("/topic/game",
-                    getCurrentSecond());
+                    getCurrentGame(false));
         }, 1, 1, TimeUnit.SECONDS);
 
     }
@@ -151,20 +151,29 @@ public class GameService {
         return BetType.TAI;
     }
 
-    public GameResponse getCurrentGame() {
+    public GameResponse getCurrentGame(Boolean isShown) {
         Double sumMaxOfAll = 0D;
         Double sumMinOfAll = 0D;
+        DiceResult diceResult = new DiceResult(
+                        null,
+                        null,
+                        null
+                );
+
         Optional<GameEntity> gameEntity = gameRepository.findFirstByStatusOrderByGameStartDesc();
         if (!gameDetailRepository.findAllByGame(gameEntity.get()).isEmpty()
                 && !(gameDetailRepository.findAllByGame(gameEntity.get()) == null)) {
             sumMaxOfAll = gameDetailRepository.getSumMaxByAllUserAndGame(gameEntity.get(), BetType.TAI);
             sumMinOfAll = gameDetailRepository.getSumMinByAllUserAndGame(gameEntity.get(), BetType.XIU);
         }
-        DiceResult diceResult = new DiceResult(
-                gameEntity.get().getDice1(),
-                gameEntity.get().getDice2(),
-                gameEntity.get().getDice3()
-        );
+
+        if (isShown) {
+            diceResult = new DiceResult(
+                    gameEntity.get().getDice1(),
+                    gameEntity.get().getDice2(),
+                    gameEntity.get().getDice3()
+            );
+        }
 
         return new GameResponse(
                 diceResult,

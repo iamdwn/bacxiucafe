@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DiceResult {
-    private int dice1;
-    private int dice2;
-    private int dice3;
+    private Integer dice1;
+    private Integer dice2;
+    private Integer dice3;
 }
