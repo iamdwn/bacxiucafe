@@ -67,22 +67,21 @@ public class GameDetailService {
                 userEntity.get(),
                 gameEntity.get(),
                 betDTO.getBetAmount(),
-                betType,
-                (gameService.getCurrentSecond() > 0
-                        && !gameEntity.get().getStatus())
-                        || gameEntity.get().getStatus() ? null : gameResult
+                betDTO.getBetType().equalsIgnoreCase(BetType.TAI.name()) ? BetType.TAI : BetType.XIU,
+                gameResult
+//                (gameService.getCurrentSecond() > 0
+//                        && !gameEntity.get().getStatus())
+//                        || gameEntity.get().getStatus() ? null : gameResult
         );
+        gameDetailRepository.save(gameDetailEntity);
 
         walletEntity.get().setBalance(walletEntity.get().getBalance() - betDTO.getBetAmount());
         walletRepository.save(walletEntity.get());
 
-        gameDetailRepository.save(gameDetailEntity);
-
         return new BetResponse(
                 gameDetailEntity.getUser().getUsername(),
                 gameDetailEntity.getBetAmount(),
-                gameDetailEntity.getBetType().name(),
-                gameDetailEntity.getGameResult()
+                betDTO.getBetType().toUpperCase()
         );
     }
 
@@ -92,18 +91,22 @@ public class GameDetailService {
                 : GameResult.LOSE;
     }
 
-    public void exchange(UserEntity userEntity, BetType gameType, WalletEntity walletEntity, GameEntity gameEntity) {
+    public Double exchange(UserEntity userEntity, BetType gameType, WalletEntity walletEntity, GameEntity gameEntity) {
+        Double result = 0D;
         if (userEntity != null
                 && walletEntity != null
                 && gameEntity != null) {
+            if (!gameDetailRepository.findAllByGame(gameEntity).isEmpty()
+                    && !(gameDetailRepository.findAllByGame(gameEntity) == null)) {
+                result = gameType.equals(BetType.TAI)
+                        ? gameDetailRepository.getSumMaxByUserAndGame(userEntity, gameEntity, BetType.TAI)
+                        : gameDetailRepository.getSumMinByUserAndGame(userEntity, gameEntity, BetType.XIU);
 
-            Double result = gameType.equals(BetType.TAI)
-                    ? gameDetailRepository.getSumMaxByUserAndGame(userEntity, gameEntity, BetType.TAI)
-                    : gameDetailRepository.getSumMaxByUserAndGame(userEntity, gameEntity, BetType.XIU);
+                walletEntity.setBalance(walletEntity.getBalance() + result * 2);
 
-            walletEntity.setBalance(walletEntity.getBalance() + result * 2);
-
-            walletRepository.save(walletEntity);
+                walletRepository.save(walletEntity);
+            }
         }
+        return result;
     }
 }

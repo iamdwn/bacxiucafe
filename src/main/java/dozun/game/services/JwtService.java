@@ -61,7 +61,7 @@ public class JwtService {
         if (parts.length != 3) {
             throw new IllegalArgumentException("Invalid Token format");
         }
-        JSONObject header = new JSONObject(decode(parts[0]));
+//        JSONObject header = new JSONObject(decode(parts[0]));
         JSONObject payload = new JSONObject(decode(parts[1]));
         String signature = parts[2];
         String headerAndPayloadHashed = hmacSha256(parts[0] + "." + parts[1], Secret_key);

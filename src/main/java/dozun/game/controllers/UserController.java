@@ -7,6 +7,7 @@ import dozun.game.models.ResponseObject;
 import dozun.game.services.JwtService;
 import dozun.game.services.UserService;
 import dozun.game.utils.TokenChecker;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "User")
 //@Api(tags="User")
 @RequestMapping("/api/v1/user")
+@SecurityRequirement(name = "bearerAuth")
 public class UserController {
 
     private UserService userService;

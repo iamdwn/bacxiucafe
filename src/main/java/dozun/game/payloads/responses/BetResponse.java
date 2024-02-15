@@ -9,10 +9,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-//@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BetResponse {
     private String username;
     private Double betAmount;
     private String betType;
-    private GameResult gameResult;
 }

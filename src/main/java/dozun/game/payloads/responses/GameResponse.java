@@ -1,5 +1,6 @@
 package dozun.game.payloads.responses;
 
+import dozun.game.enums.GameResult;
 import dozun.game.enums.GameStatus;
 import dozun.game.models.DiceResult;
 import lombok.AllArgsConstructor;

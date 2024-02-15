@@ -93,7 +93,6 @@ public class GameService {
             scheduledExecutor.schedule(() -> {
                 gameRepository.delete(gameEntity);
                 resetTime();
-//            webSocketSession.onClose();
             }, 33, TimeUnit.SECONDS);
 
             scheduledExecutor.schedule(() -> {
