@@ -17,7 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin
+//@CrossOrigin
 @Tag(name = "Wallet")
 //@Api(tags="Wallet")
 @RequestMapping("/api/v1/user/wallet")

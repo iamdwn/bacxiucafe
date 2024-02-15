@@ -17,7 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin
+//@CrossOrigin
 @Tag(name = "User")
 //@Api(tags="User")
 @RequestMapping("/api/v1/user")

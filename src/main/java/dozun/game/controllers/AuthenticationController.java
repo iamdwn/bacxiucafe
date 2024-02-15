@@ -30,7 +30,7 @@ import java.util.*;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin
+//@CrossOrigin
 @Tag(name = "Auth")
 //@Api(tags="Auth")
 @RequestMapping("api/v1/auth")

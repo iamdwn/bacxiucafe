@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
-@CrossOrigin
+//@CrossOrigin
 @Tag(name = "Application")
 //@Api(tags="Application")
 @RequestMapping("api/v1/app")

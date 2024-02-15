@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.socket.WebSocketSession;
 
 @RestController
-@CrossOrigin
+//@CrossOrigin
 @Tag(name = "Board")
 //@Api(tags="Board")
 @RequestMapping("api/v1/game")
