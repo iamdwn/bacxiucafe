@@ -99,7 +99,7 @@ public class UserService {
             sumMin = gameDetailRepository.getSumMinByUserAndGame(userEntity.get(), gameEntity.get(), BetType.XIU);
         }
 
-//        Double resultaaaaaaaaaaaa = gameDetailService.exchange(userEntity.get(), gameEntity.get().getType(), walletEntity.get(), gameEntity.get());
+        Double result = gameDetailService.exchange(userEntity.get(), gameEntity.get().getType(), walletEntity.get(), gameEntity.get());
 
         return new UserBetResponse(
                 walletEntity.get().getBalance(),
@@ -108,7 +108,7 @@ public class UserService {
                 (gameService.getCurrentSecond() > 0
                         && !gameEntity.get().getStatus())
                         || gameEntity.get().getStatus() ? null : gameEntity.get().getType().name(),
-                0D
+                result
         );
     }
 }

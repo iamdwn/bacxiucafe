@@ -107,6 +107,6 @@ public class GameDetailService {
                 walletRepository.save(walletEntity);
             }
         }
-        return result;
+        return result > 0 ? result * 2 : result;
     }
 }
