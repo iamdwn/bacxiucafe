@@ -26,6 +26,7 @@ public interface GameRepository extends JpaRepository<GameEntity, Long> {
 
     @Query("SELECT ge FROM  GameEntity ge ORDER BY ge.gameStart DESC LIMIT 1")
     Optional<GameEntity> findFirstByStatusOrderByGameStartDesc();
+
     Optional<GameEntity> findByStatusIsTrue();
 
 //    @Modifying

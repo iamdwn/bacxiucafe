@@ -16,11 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
 import java.util.Date;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
 @Service
 public class GameService {
 
@@ -102,17 +104,22 @@ public class GameService {
                 countdown(gameEntity);
             }, 1, 1, TimeUnit.SECONDS);
             gameRepository.save(gameEntity);
-        },0, 33, TimeUnit.SECONDS);
+        }, 0, 33, TimeUnit.SECONDS);
+
+//        scheduledExecutor.scheduleAtFixedRate(() -> {
+//            messagingTemplate.convertAndSend("/topic/game",
+//                    getCurrentGame(true));
+//        }, 1, 30, TimeUnit.SECONDS);
+//
+//        scheduledExecutor.scheduleAtFixedRate(() -> {
+//            messagingTemplate.convertAndSend("/topic/game",
+//                    getCurrentGame(false));
+//        }, 1, 1, TimeUnit.SECONDS);
 
         scheduledExecutor.scheduleAtFixedRate(() -> {
             messagingTemplate.convertAndSend("/topic/game",
-                    getCurrentGame(true));
-        }, 1, 30, TimeUnit.SECONDS);
-
-        scheduledExecutor.scheduleAtFixedRate(() -> {
-            messagingTemplate.convertAndSend("/topic/game",
-                    getCurrentGame(false));
-        }, 1, 1, TimeUnit.SECONDS);
+                    getCurrentGame());
+        }, 0, 33, TimeUnit.SECONDS);
 
     }
 
@@ -151,15 +158,17 @@ public class GameService {
         return BetType.TAI;
     }
 
-    public GameResponse getCurrentGame(Boolean isShown) {
+    public DiceResult getHiddenGame() {
+        return new DiceResult(
+                null,
+                null,
+                null
+        );
+    }
+
+    public GameResponse getCurrentGame() {
         Double sumMaxOfAll = 0D;
         Double sumMinOfAll = 0D;
-        DiceResult diceResult = new DiceResult(
-                        null,
-                        null,
-                        null
-                );
-
         Optional<GameEntity> gameEntity = gameRepository.findFirstByStatusOrderByGameStartDesc();
         if (!gameDetailRepository.findAllByGame(gameEntity.get()).isEmpty()
                 && !(gameDetailRepository.findAllByGame(gameEntity.get()) == null)) {
@@ -167,16 +176,16 @@ public class GameService {
             sumMinOfAll = gameDetailRepository.getSumMinByAllUserAndGame(gameEntity.get(), BetType.XIU);
         }
 
-        if (isShown) {
-            diceResult = new DiceResult(
-                    gameEntity.get().getDice1(),
-                    gameEntity.get().getDice2(),
-                    gameEntity.get().getDice3()
-            );
-        }
+        DiceResult diceResult = new DiceResult(
+                gameEntity.get().getDice1(),
+                gameEntity.get().getDice2(),
+                gameEntity.get().getDice3()
+        );
 
         return new GameResponse(
-                diceResult,
+                getCurrentSecond() > 0 ?
+                        getHiddenGame()
+                        : diceResult,
                 sumMaxOfAll,
                 sumMinOfAll,
                 gameEntity.get().getStatus() ? GameStatus.STARTING.name()

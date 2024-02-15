@@ -81,7 +81,7 @@ public class GameController {
             String token = request.getHeader("Authorization");
             if (TokenChecker.checkToken(token)) {
                 return ResponseEntity.status(HttpStatus.OK)
-                        .body(new ResponseObject(dozun.game.enums.ResponseStatus.SUCCESS, "success", gameService.getCurrentGame(false)));
+                        .body(new ResponseObject(dozun.game.enums.ResponseStatus.SUCCESS, "success", gameService.getCurrentGame()));
             }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ResponseObject(dozun.game.enums.ResponseStatus.BAD_REQUEST, "failed", "bet failed"));
