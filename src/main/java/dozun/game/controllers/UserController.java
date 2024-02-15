@@ -39,9 +39,10 @@ public class UserController {
 
 
     @GetMapping
-    public ResponseEntity<ResponseObject> getCurrentUser(HttpServletRequest request) {
+    public ResponseEntity<ResponseObject> getCurrentUser(@RequestHeader("bearerAuth") String token) {
         try {
-            String token = request.getHeader("Authorization");
+//            String token = request.getHeader("Authorization");
+            token = "Bearer " + token;
             if (TokenChecker.checkToken(token)) {
                 String username = jwtService.extractTokenToGetUser(token);
                 return ResponseEntity.status(HttpStatus.OK)

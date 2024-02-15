@@ -8,12 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BetRequest {
-    private String username;
-
     private Double betAmount;
-
     private String betType;
-
-    @Nullable
-    private GameResult gameResult;
 }
