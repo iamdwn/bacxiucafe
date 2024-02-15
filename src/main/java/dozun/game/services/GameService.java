@@ -182,8 +182,8 @@ public class GameService {
                 gameEntity.get().getStatus() ? GameStatus.STARTING.name()
                         : !(gameEntity.get().getCountdown() == 0)
                         ? GameStatus.BET_LOCKED.name()
-                        : GameStatus.CLOSED.name()
-//                second
+                        : GameStatus.CLOSED.name(),
+                second
         );
     }
 }
