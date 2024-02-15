@@ -119,7 +119,7 @@ public class GameService {
         scheduledExecutor.scheduleAtFixedRate(() -> {
             messagingTemplate.convertAndSend("/topic/game",
                     getCurrentGame());
-        }, 0, 33, TimeUnit.SECONDS);
+        }, 0, 1, TimeUnit.SECONDS);
 
     }
 

@@ -79,23 +79,23 @@ public class UserService {
                 .body(new ResponseObject(ResponseStatus.SUCCESS, "signup successfully", ""));
     }
 
-    public UserBetResponse getCurrentUser(String username) {
-        Double sumMax = 0D;
-        Double sumMin = 0D;
-        Optional<UserEntity> userEntity = userRepository.findByUsernameAndStatusTrue(username);
-        if (!userEntity.isPresent()) return null;
+        public UserBetResponse getCurrentUser(String username) {
+            Double sumMax = 0D;
+            Double sumMin = 0D;
+            Optional<UserEntity> userEntity = userRepository.findByUsernameAndStatusTrue(username);
+            if (!userEntity.isPresent()) return null;
 
-        Optional<WalletEntity> walletEntity = walletRepository.findByUser(userEntity.get());
-        Optional<GameEntity> gameEntity = gameRepository.findFirstByStatusOrderByGameStartDesc();
+            Optional<WalletEntity> walletEntity = walletRepository.findByUser(userEntity.get());
+            Optional<GameEntity> gameEntity = gameRepository.findFirstByStatusOrderByGameStartDesc();
 
-        if (!walletEntity.isPresent()) return null;
-        if (!gameDetailRepository.findAllByGame(gameEntity.get()).isEmpty()
-                && !(gameDetailRepository.findAllByGame(gameEntity.get()) == null)) {
-            sumMax = gameDetailRepository.getSumMaxByUserAndGame(userEntity.get(), gameEntity.get(), BetType.TAI);
-            sumMin = gameDetailRepository.getSumMinByUserAndGame(userEntity.get(), gameEntity.get(), BetType.XIU);
-        }
-        return new UserBetResponse(
-                walletEntity.get().getBalance(),
+            if (!walletEntity.isPresent()) return null;
+            if (!gameDetailRepository.findAllByGame(gameEntity.get()).isEmpty()
+                    && !(gameDetailRepository.findAllByGame(gameEntity.get()) == null)) {
+                sumMax = gameDetailRepository.getSumMaxByUserAndGame(userEntity.get(), gameEntity.get(), BetType.TAI);
+                sumMin = gameDetailRepository.getSumMinByUserAndGame(userEntity.get(), gameEntity.get(), BetType.XIU);
+            }
+            return new UserBetResponse(
+                    walletEntity.get().getBalance(),
                 sumMax,
                 sumMin
         );
