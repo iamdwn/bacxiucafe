@@ -91,7 +91,8 @@ public class GameService {
                     Duration.valueOf("GAME_DURATION").getDur()
             );
             scheduledExecutor.schedule(() -> {
-                gameDetailRepository.deleteAll();
+                if (!gameDetailRepository.findAll().isEmpty())
+                    gameDetailRepository.deleteAll();
                 gameRepository.delete(gameEntity);
                 resetTime();
             }, 34, TimeUnit.SECONDS);
@@ -188,7 +189,7 @@ public class GameService {
                         : diceResult,
                 sumMaxOfAll,
                 sumMinOfAll,
-                gameEntity.get().getStatus()? GameStatus.STARTING.name()
+                gameEntity.get().getStatus() ? GameStatus.STARTING.name()
                         : !(gameEntity.get().getCountdown() == 0)
                         ? GameStatus.BET_LOCKED.name()
                         : GameStatus.CLOSED.name(),
