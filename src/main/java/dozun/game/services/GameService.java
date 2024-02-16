@@ -91,19 +91,20 @@ public class GameService {
                     Duration.valueOf("GAME_DURATION").getDur()
             );
             scheduledExecutor.schedule(() -> {
+                gameDetailRepository.deleteAll();
                 gameRepository.delete(gameEntity);
                 resetTime();
-            }, 33, TimeUnit.SECONDS);
+            }, 34, TimeUnit.SECONDS);
 
             scheduledExecutor.schedule(() -> {
                 lockBet(gameEntity);
-            }, Duration.valueOf("GAME_DURATION").getDur() - Duration.BET_LOCKED_DURATION.getDur(), TimeUnit.SECONDS);
+            }, Duration.valueOf("GAME_DURATION").getDur() - Duration.BET_LOCKED_DURATION.getDur() - 1, TimeUnit.SECONDS);
 
             scheduledExecutor.scheduleAtFixedRate(() -> {
                 countdown(gameEntity);
-            }, 1, 1, TimeUnit.SECONDS);
+            }, 0, 1, TimeUnit.SECONDS);
             gameRepository.save(gameEntity);
-        }, 0, 33, TimeUnit.SECONDS);
+        }, 0, 35, TimeUnit.SECONDS);
 
 //        scheduledExecutor.scheduleAtFixedRate(() -> {
 //            messagingTemplate.convertAndSend("/topic/game",
@@ -118,7 +119,7 @@ public class GameService {
         scheduledExecutor.scheduleAtFixedRate(() -> {
             messagingTemplate.convertAndSend("/topic/game",
                     getCurrentGame());
-        }, 0, 1, TimeUnit.SECONDS);
+        }, 1, 1, TimeUnit.SECONDS);
 
     }
 
@@ -129,8 +130,8 @@ public class GameService {
 
     private void countdown(GameEntity gameEntity) {
         if (gameEntity.getCountdown() > 0) {
-            gameEntity.setCountdown(gameEntity.getCountdown() - 1);
             second = (second > 0) ? gameEntity.getCountdown() - 1 : 0;
+            gameEntity.setCountdown(gameEntity.getCountdown() - 1);
             gameRepository.save(gameEntity);
         }
     }
@@ -187,7 +188,7 @@ public class GameService {
                         : diceResult,
                 sumMaxOfAll,
                 sumMinOfAll,
-                gameEntity.get().getStatus() ? GameStatus.STARTING.name()
+                gameEntity.get().getStatus()? GameStatus.STARTING.name()
                         : !(gameEntity.get().getCountdown() == 0)
                         ? GameStatus.BET_LOCKED.name()
                         : GameStatus.CLOSED.name(),
