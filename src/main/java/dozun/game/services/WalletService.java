@@ -32,21 +32,22 @@ public class WalletService {
         if (!walletEntity.isPresent()) throw new RuntimeException("not found user");
 
         walletEntity.get().setBalance(walletEntity.get().getBalance() + walletDTO.getChargeAmount());
+        walletEntity.get().setBaseBalance(walletEntity.get().getBalance() + walletDTO.getChargeAmount());
 
         walletRepository.save(walletEntity.get());
     }
 
-    public WalletResponse getWallet(String username) {
-        Optional<UserEntity> userEntity = userRepository.findByUsernameAndStatusTrue(username);
-        Optional<WalletEntity> walletEntity = walletRepository.findByUser(userEntity.get());
-
-        if (!userEntity.isPresent()) throw new RuntimeException("not found user");
-
-        if (!walletEntity.isPresent()) throw new RuntimeException("not found user");
-
-        return new WalletResponse(
-                username,
-                walletEntity.get().getBalance()
-        );
-    }
+//    public WalletResponse getWallet(String username) {
+//        Optional<UserEntity> userEntity = userRepository.findByUsernameAndStatusTrue(username);
+//        Optional<WalletEntity> walletEntity = walletRepository.findByUser(userEntity.get());
+//
+//        if (!userEntity.isPresent()) throw new RuntimeException("not found user");
+//
+//        if (!walletEntity.isPresent()) throw new RuntimeException("not found user");
+//
+//        return new WalletResponse(
+//                username,
+//                walletEntity.get().getBalance()
+//        );
+//    }
 }

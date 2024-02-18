@@ -101,17 +101,25 @@ public class UserService {
         }
 
 //        gameDetailService.exchange(userEntity.get(), gameEntity.get().getType(), walletEntity.get(), gameEntity.get());
-        Double result = gameDetailService.getResult();
 
+        if (!(gameService.getCurrentSecond() > 0)) {
+            walletEntity.get().setBaseBalance(walletEntity.get().getBalance());
+            walletRepository.save(walletEntity.get());
+        }
 
         return new UserBetResponse(
-                walletEntity.get().getBalance(),
+                gameService.getCurrentSecond() > 0 ? walletEntity.get().getBaseBalance() : walletEntity.get().getBalance(),
                 sumMax,
                 sumMin,
                 (gameService.getCurrentSecond() > 0
                         && !gameEntity.get().getStatus())
                         || gameEntity.get().getStatus() ? null : gameEntity.get().getType().name(),
-                result
+                gameService.getCurrentSecond() >= 1
+                        ? 0D : gameEntity.get().getType().equals(BetType.TAI)
+                        ? sumMax * 2 : sumMin * 2,
+                gameService.getCurrentSecond() >= 1
+                        ? 0D : gameEntity.get().getType().equals(BetType.TAI)
+                        ? 0 - sumMin : 0 - sumMax
         );
     }
 }

@@ -102,7 +102,7 @@ public class AuthenticationController {
 
         userRepository.save(user);
         walletRepository.save(new WalletEntity(
-                user, 0D
+                user, 0D, 0D
         ));
         AuthenticationRequest authenticationRequest = new AuthenticationRequest(signUpRequest.getUsername(), signUpRequest.getPassword());
         return ResponseEntity.ok(authenticationService.authenticate(authenticationRequest));

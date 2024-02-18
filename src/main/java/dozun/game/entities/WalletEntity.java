@@ -30,8 +30,12 @@ public class WalletEntity {
     @Column
     private Double balance;
 
-    public WalletEntity(UserEntity user, Double balance) {
+    @Column
+    private Double baseBalance;
+
+    public WalletEntity(UserEntity user, Double balance,Double baseBalance) {
         this.user = user;
         this.balance = balance;
+        this.baseBalance = baseBalance;
     }
 }

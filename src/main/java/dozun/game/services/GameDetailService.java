@@ -2,6 +2,7 @@ package dozun.game.services;
 
 import dozun.game.entities.WalletEntity;
 import dozun.game.enums.BetType;
+import dozun.game.enums.GameStatus;
 import dozun.game.payloads.requests.BetRequest;
 import dozun.game.entities.GameDetailEntity;
 import dozun.game.entities.GameEntity;
@@ -61,20 +62,32 @@ public class GameDetailService {
                 && (walletEntity.get().getBalance().compareTo(betDTO.getBetAmount())) == -1))
             throw new RuntimeException("your balance is not enough for this bet");
 
-        BetType betType = (gameEntity.get().getDice1() == gameEntity.get().getDice2()
-                && gameEntity.get().getDice1() == gameEntity.get().getDice3())
-                ? BetType.TAMBAO
-                : betDTO.getBetType().equals(BetType.TAI.name())
+//        BetType betType = (gameEntity.get().getDice1() == gameEntity.get().getDice2()
+//                && gameEntity.get().getDice1() == gameEntity.get().getDice3())
+//                ? BetType.TAMBAO
+//                : betDTO.getBetType().equalsIgnoreCase(BetType.TAI.name())
+//                ? BetType.TAI
+//                : BetType.XIU;
+
+        BetType betType = betDTO.getBetType().equalsIgnoreCase(BetType.TAI.name())
                 ? BetType.TAI
                 : BetType.XIU;
 
+        walletEntity.get().setBaseBalance(walletEntity.get().getBaseBalance() - betDTO.getBetAmount());
+        walletEntity.get().setBalance(walletEntity.get().getBalance() - betDTO.getBetAmount());
+        walletRepository.save(walletEntity.get());
+
         GameResult gameResult = checkWin(betType, gameEntity.get());
+        if (gameResult.equals(GameResult.WIN)) {
+            walletEntity.get().setBalance(walletEntity.get().getBalance() + betDTO.getBetAmount() * 2);
+            walletRepository.save(walletEntity.get());
+        }
 
         GameDetailEntity gameDetailEntity = new GameDetailEntity(
                 userEntity.get(),
                 gameEntity.get(),
                 betDTO.getBetAmount(),
-                betDTO.getBetType().equalsIgnoreCase(BetType.TAI.name()) ? BetType.TAI : BetType.XIU,
+                betType,
                 gameResult,
 //                (gameService.getCurrentSecond() > 0
 //                        && !gameEntity.get().getStatus())
@@ -83,14 +96,12 @@ public class GameDetailService {
         );
         gameDetailRepository.save(gameDetailEntity);
 
-        walletEntity.get().setBalance(walletEntity.get().getBalance() - betDTO.getBetAmount());
-        walletRepository.save(walletEntity.get());
 
         return new BetResponse(
                 gameDetailEntity.getUser().getUsername(),
                 gameDetailEntity.getBetAmount(),
                 betDTO.getBetType().toUpperCase(),
-                walletEntity.get().getBalance()
+                walletEntity.get().getBaseBalance()
         );
     }
 
@@ -115,14 +126,7 @@ public class GameDetailService {
 //        }
 //    }
 
-    public Double getResult() {
-        return result > 0
-                && !(gameService.getCurrentSecond() > 0)
-                ? result * 2 : result;
-    }
-
-    public void saveWallet(WalletEntity walletEntity) {
-        walletEntity.setBalance(walletEntity.getBalance() + result * 2);
-        walletRepository.save(walletEntity);
-    }
+//    public Double getResult() {
+//        return result;
+//    }
 }

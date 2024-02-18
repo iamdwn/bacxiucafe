@@ -1,7 +1,5 @@
 package dozun.game.payloads.responses;
 
-import dozun.game.entities.WalletEntity;
-import dozun.game.enums.GameResult;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,5 +12,6 @@ public class UserBetResponse {
     private Double max;
     private Double min;
     private String gameResult;
-    private Double amount;
+    private Double winnings;
+    private Double losings;
 }
