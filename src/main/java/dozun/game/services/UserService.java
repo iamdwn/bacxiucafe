@@ -90,6 +90,7 @@ public class UserService {
         Optional<GameEntity> gameEntity = gameRepository.findFirstOrderByGameStartDesc();
 
         if (!walletEntity.isPresent()) return null;
+        if (!gameEntity.isPresent()) return null;
 
         if (!gameDetailRepository.findAllByGame(gameEntity.get()).isEmpty()
                 && !(gameDetailRepository.findAllByGame(gameEntity.get()) == null)) {
