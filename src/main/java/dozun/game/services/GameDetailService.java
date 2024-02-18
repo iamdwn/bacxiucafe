@@ -15,7 +15,10 @@ import dozun.game.repositories.WalletRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class GameDetailService {
@@ -24,14 +27,17 @@ public class GameDetailService {
     private GameDetailRepository gameDetailRepository;
     private WalletRepository walletRepository;
     private GameService gameService;
+    private Double result = 0D;
+    private ScheduledExecutorService scheduledExecutor;
 
     @Autowired
-    public GameDetailService(UserRepository userRepository, GameRepository gameRepository, GameDetailRepository gameDetailRepository, WalletRepository walletRepository, GameService gameService) {
+    public GameDetailService(UserRepository userRepository, GameRepository gameRepository, GameDetailRepository gameDetailRepository, WalletRepository walletRepository, GameService gameService, ScheduledExecutorService scheduledExecutor) {
         this.userRepository = userRepository;
         this.gameRepository = gameRepository;
         this.gameDetailRepository = gameDetailRepository;
         this.walletRepository = walletRepository;
         this.gameService = gameService;
+        this.scheduledExecutor = scheduledExecutor;
     }
 
     public BetResponse bet(String username, BetRequest betDTO) {
@@ -68,10 +74,11 @@ public class GameDetailService {
                 gameEntity.get(),
                 betDTO.getBetAmount(),
                 betDTO.getBetType().equalsIgnoreCase(BetType.TAI.name()) ? BetType.TAI : BetType.XIU,
-                gameResult
+                gameResult,
 //                (gameService.getCurrentSecond() > 0
 //                        && !gameEntity.get().getStatus())
 //                        || gameEntity.get().getStatus() ? null : gameResult
+                true
         );
         gameDetailRepository.save(gameDetailEntity);
 
@@ -92,22 +99,29 @@ public class GameDetailService {
                 : GameResult.LOSE;
     }
 
-    public Double exchange(UserEntity userEntity, BetType gameType, WalletEntity walletEntity, GameEntity gameEntity) {
-        Double result = 0D;
-        if (userEntity != null
-                && walletEntity != null
-                && gameEntity != null) {
-            if (!gameDetailRepository.findAllByGame(gameEntity).isEmpty()
-                    && !(gameDetailRepository.findAllByGame(gameEntity) == null)) {
-                result = gameType.equals(BetType.TAI)
-                        ? gameDetailRepository.getSumMaxByUserAndGame(userEntity, gameEntity, BetType.TAI)
-                        : gameDetailRepository.getSumMinByUserAndGame(userEntity, gameEntity, BetType.XIU);
+//    public void exchange(UserEntity userEntity, BetType gameType, WalletEntity walletEntity, GameEntity gameEntity) {
+//            if (!gameDetailRepository.findAllByGame(gameEntity).isEmpty()
+//                    && !(gameDetailRepository.findAllByGame(gameEntity) == null)) {
+//
+//                if (gameService.getCurrentSecond() == 0) {
+//                    List<GameDetailEntity> gde = gameDetailRepository.getByUserAndGame(userEntity, gameEntity);
+//                    result = gde > 0
+//                            ? gameDetailRepository.getSumByUserAndGame(userEntity, gameEntity, gameType)
+//                            : 0D;
+//                            saveWallet(walletEntity);
+//
+//            }
+//        }
+//    }
 
-                walletEntity.setBalance(walletEntity.getBalance() + result * 2);
+    public Double getResult() {
+        return result > 0
+                && !(gameService.getCurrentSecond() > 0)
+                ? result * 2 : result;
+    }
 
-                walletRepository.save(walletEntity);
-            }
-        }
-        return result > 0 ? result * 2 : result;
+    public void saveWallet(WalletEntity walletEntity) {
+        walletEntity.setBalance(walletEntity.getBalance() + result * 2);
+        walletRepository.save(walletEntity);
     }
 }

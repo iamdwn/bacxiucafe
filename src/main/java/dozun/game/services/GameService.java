@@ -36,6 +36,7 @@ public class GameService {
     private GameDetailRepository gameDetailRepository;
     private ScheduledExecutorService scheduler;
     private ScheduledExecutorService scheduledExecutor;
+    private Long tracked = 0L;
     private Long second = Duration.valueOf("GAME_DURATION").getDur();
 
     @Autowired
@@ -122,6 +123,12 @@ public class GameService {
                     getCurrentGame());
         }, 1, 1, TimeUnit.SECONDS);
 
+        scheduledExecutor.schedule(() -> {
+            if (!(getCurrentSecond() > 5)) {
+                    tracked++;
+            } else resetTracked();
+        }, 30, TimeUnit.SECONDS);
+
     }
 
     private void lockBet(GameEntity gameEntity) {
@@ -141,8 +148,16 @@ public class GameService {
         second = Duration.valueOf("GAME_DURATION").getDur();
     }
 
+    public void resetTracked() {
+        tracked = 0L;
+    }
+
     public Long getCurrentSecond() {
         return second;
+    }
+
+    public Long getCurrentTracked() {
+        return tracked;
     }
 
     public BetType checkGameType(DiceResult diceResult) {
@@ -170,7 +185,7 @@ public class GameService {
     public GameResponse getCurrentGame() {
         Double sumMaxOfAll = 0D;
         Double sumMinOfAll = 0D;
-        Optional<GameEntity> gameEntity = gameRepository.findFirstByStatusOrderByGameStartDesc();
+        Optional<GameEntity> gameEntity = gameRepository.findFirstOrderByGameStartDesc();
         if (!gameDetailRepository.findAllByGame(gameEntity.get()).isEmpty()
                 && !(gameDetailRepository.findAllByGame(gameEntity.get()) == null)) {
             sumMaxOfAll = gameDetailRepository.getSumMaxByAllUserAndGame(gameEntity.get(), BetType.TAI);

@@ -1,13 +1,10 @@
 package dozun.game.services;
 
-import dozun.game.entities.GameEntity;
-import dozun.game.entities.WalletEntity;
+import dozun.game.entities.*;
 import dozun.game.enums.BetType;
 import dozun.game.enums.GameResult;
 import dozun.game.enums.ResponseStatus;
 import dozun.game.payloads.dtos.UserDTO;
-import dozun.game.entities.RoleEntity;
-import dozun.game.entities.UserEntity;
 import dozun.game.hash.Hashing;
 import dozun.game.models.ResponseObject;
 import dozun.game.payloads.responses.UserBetResponse;
@@ -90,21 +87,27 @@ public class UserService {
         if (!userEntity.isPresent()) return null;
 
         Optional<WalletEntity> walletEntity = walletRepository.findByUser(userEntity.get());
-        Optional<GameEntity> gameEntity = gameRepository.findFirstByStatusOrderByGameStartDesc();
+        Optional<GameEntity> gameEntity = gameRepository.findFirstOrderByGameStartDesc();
 
         if (!walletEntity.isPresent()) return null;
+
         if (!gameDetailRepository.findAllByGame(gameEntity.get()).isEmpty()
                 && !(gameDetailRepository.findAllByGame(gameEntity.get()) == null)) {
-            sumMax = gameDetailRepository.getSumMaxByUserAndGame(userEntity.get(), gameEntity.get(), BetType.TAI);
-            sumMin = gameDetailRepository.getSumMinByUserAndGame(userEntity.get(), gameEntity.get(), BetType.XIU);
+            sumMax = (gameDetailRepository.getByUserAndGame(userEntity.get(), gameEntity.get(), BetType.TAI)) > 0
+                    ? gameDetailRepository.getSumByUserAndGame(userEntity.get(), gameEntity.get(), BetType.TAI) : 0D;
+
+            sumMin = (gameDetailRepository.getByUserAndGame(userEntity.get(), gameEntity.get(), BetType.XIU)) > 0
+                    ? gameDetailRepository.getSumByUserAndGame(userEntity.get(), gameEntity.get(), BetType.XIU) : 0D;
         }
 
-        Double result = gameDetailService.exchange(userEntity.get(), gameEntity.get().getType(), walletEntity.get(), gameEntity.get());
+//        gameDetailService.exchange(userEntity.get(), gameEntity.get().getType(), walletEntity.get(), gameEntity.get());
+        Double result = gameDetailService.getResult();
+
 
         return new UserBetResponse(
                 walletEntity.get().getBalance(),
-                sumMax != null ? sumMax : 0D,
-                sumMin != null ? sumMin : 0D,
+                sumMax,
+                sumMin,
                 (gameService.getCurrentSecond() > 0
                         && !gameEntity.get().getStatus())
                         || gameEntity.get().getStatus() ? null : gameEntity.get().getType().name(),

@@ -20,20 +20,20 @@ public interface GameDetailRepository extends JpaRepository<GameDetailEntity, Lo
                                                  @Param("game") GameEntity game);
 
     @Query("SELECT SUM(gde.betAmount) FROM GameDetailEntity gde JOIN GameEntity ge ON ge.id = gde.game.id " +
-            "WHERE gde.user =:user AND gde.game =:game AND ge.countdown > 0 AND gde.betType = :betType")
-    Double getSumMaxByUserAndGame(@Param("user") UserEntity user,
-                                  @Param("game") GameEntity game,
-                                  @Param("betType") BetType betType);
+            "WHERE gde.user =:user AND gde.game =:game AND gde.betType = :betType")
+    Double getSumByUserAndGame(@Param("user") UserEntity user,
+                               @Param("game") GameEntity game,
+                               @Param("betType") BetType betType);
+
+    @Query("SELECT COUNT(gde) FROM GameDetailEntity gde JOIN GameEntity ge ON ge.id = gde.game.id " +
+            "WHERE gde.user =:user AND gde.game =:game AND gde.betType = :betType")
+    Long getByUserAndGame(@Param("user") UserEntity user,
+                          @Param("game") GameEntity game,
+                          @Param("betType") BetType betType);
 
     @Query("SELECT SUM(gde.betAmount) FROM GameDetailEntity gde JOIN GameEntity ge ON ge.id = gde.game.id " +
-            "WHERE gde.user =:user AND gde.game =:game AND ge.countdown > 0 AND gde.betType = :betType")
-    Double getSumMinByUserAndGame(@Param("user") UserEntity user,
-                                  @Param("game") GameEntity game,
-                                  @Param("betType") BetType betType);
-
-    @Query("SELECT SUM(gde.betAmount) FROM GameDetailEntity gde JOIN GameEntity ge ON ge.id = gde.game.id " +
-            "WHERE gde.game =:game AND ge.status = true AND gde.betType = :betType")
-    Double getSumMaxByAllUserAndGame(@Param("game") GameEntity game,
+                "WHERE gde.game =:game AND ge.status = true AND gde.betType = :betType")
+        Double getSumMaxByAllUserAndGame(@Param("game") GameEntity game,
                                      @Param("betType") BetType betType);
 
     @Query("SELECT SUM(gde.betAmount) FROM GameDetailEntity gde JOIN GameEntity ge ON ge.id = gde.game.id " +
@@ -42,6 +42,6 @@ public interface GameDetailRepository extends JpaRepository<GameDetailEntity, Lo
                                      @Param("betType") BetType betType);
 
     @Query("SELECT gde FROM GameDetailEntity gde JOIN GameEntity ge ON ge.id = gde.game.id " +
-            "WHERE gde.game =:game AND ge.status = true")
+            "WHERE gde.game =:game")
     List<GameDetailEntity> findAllByGame(@Param("game") GameEntity game);
 }

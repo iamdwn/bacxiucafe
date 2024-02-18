@@ -42,12 +42,16 @@ public class  GameDetailEntity {
     @Enumerated
     private GameResult gameResult;
 
-    public GameDetailEntity(UserEntity user, GameEntity game, Double betAmount, BetType betType, GameResult gameResult) {
+    @Column
+    private Boolean status;
+
+    public GameDetailEntity(UserEntity user, GameEntity game, Double betAmount, BetType betType, GameResult gameResult, Boolean status) {
         this.user = user;
         this.game = game;
         this.betAmount = betAmount;
         this.betType = betType;
         this.gameResult = gameResult;
+        this.status = status;
     }
 
     public GameDetailEntity(UserEntity user, GameEntity game, Double betAmount, BetType betType) {
