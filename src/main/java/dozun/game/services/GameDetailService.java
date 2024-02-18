@@ -81,7 +81,8 @@ public class GameDetailService {
         return new BetResponse(
                 gameDetailEntity.getUser().getUsername(),
                 gameDetailEntity.getBetAmount(),
-                betDTO.getBetType().toUpperCase()
+                betDTO.getBetType().toUpperCase(),
+                walletEntity.get().getBalance()
         );
     }
 

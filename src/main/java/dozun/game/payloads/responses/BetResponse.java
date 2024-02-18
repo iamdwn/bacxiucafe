@@ -13,4 +13,5 @@ public class BetResponse {
     private String username;
     private Double betAmount;
     private String betType;
+    private Double balance;
 }
