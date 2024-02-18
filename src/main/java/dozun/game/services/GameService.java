@@ -186,10 +186,19 @@ public class GameService {
         Double sumMaxOfAll = 0D;
         Double sumMinOfAll = 0D;
         Optional<GameEntity> gameEntity = gameRepository.findFirstOrderByGameStartDesc();
+//        if (!gameDetailRepository.findAllByGame(gameEntity.get()).isEmpty()
+//                && !(gameDetailRepository.findAllByGame(gameEntity.get()) == null)) {
+//            sumMaxOfAll = gameDetailRepository.getSumByAllUserAndGame(gameEntity.get(), BetType.TAI);
+//            sumMinOfAll = gameDetailRepository.getSumByAllUserAndGame(gameEntity.get(), BetType.XIU);
+//        }
+
         if (!gameDetailRepository.findAllByGame(gameEntity.get()).isEmpty()
                 && !(gameDetailRepository.findAllByGame(gameEntity.get()) == null)) {
-            sumMaxOfAll = gameDetailRepository.getSumMaxByAllUserAndGame(gameEntity.get(), BetType.TAI);
-            sumMinOfAll = gameDetailRepository.getSumMinByAllUserAndGame(gameEntity.get(), BetType.XIU);
+            sumMaxOfAll = (gameDetailRepository.getByAllUserAndGame(gameEntity.get(), BetType.TAI)) > 0
+                    ? gameDetailRepository.getSumByAllUserAndGame(gameEntity.get(), BetType.TAI) : 0D;
+
+            sumMinOfAll = (gameDetailRepository.getByAllUserAndGame(gameEntity.get(), BetType.XIU)) > 0
+                    ? gameDetailRepository.getSumByAllUserAndGame(gameEntity.get(), BetType.XIU) : 0D;
         }
 
         DiceResult diceResult = new DiceResult(

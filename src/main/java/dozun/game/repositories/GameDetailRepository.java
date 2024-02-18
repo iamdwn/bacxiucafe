@@ -32,14 +32,14 @@ public interface GameDetailRepository extends JpaRepository<GameDetailEntity, Lo
                           @Param("betType") BetType betType);
 
     @Query("SELECT SUM(gde.betAmount) FROM GameDetailEntity gde JOIN GameEntity ge ON ge.id = gde.game.id " +
-                "WHERE gde.game =:game AND ge.status = true AND gde.betType = :betType")
-        Double getSumMaxByAllUserAndGame(@Param("game") GameEntity game,
-                                     @Param("betType") BetType betType);
+            "WHERE gde.game =:game AND gde.betType = :betType")
+    Double getSumByAllUserAndGame(@Param("game") GameEntity game,
+                                  @Param("betType") BetType betType);
 
-    @Query("SELECT SUM(gde.betAmount) FROM GameDetailEntity gde JOIN GameEntity ge ON ge.id = gde.game.id " +
-            "WHERE gde.game =:game AND ge.status = true AND gde.betType = :betType")
-    Double getSumMinByAllUserAndGame(@Param("game") GameEntity game,
-                                     @Param("betType") BetType betType);
+    @Query("SELECT COUNT(gde) FROM GameDetailEntity gde JOIN GameEntity ge ON ge.id = gde.game.id " +
+            "WHERE gde.game =:game AND gde.betType = :betType")
+    Long getByAllUserAndGame(@Param("game") GameEntity game,
+                             @Param("betType") BetType betType);
 
     @Query("SELECT gde FROM GameDetailEntity gde JOIN GameEntity ge ON ge.id = gde.game.id " +
             "WHERE gde.game =:game")
