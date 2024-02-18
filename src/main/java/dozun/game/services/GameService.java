@@ -213,7 +213,8 @@ public class GameService {
                         : diceResult,
                 sumMaxOfAll,
                 sumMinOfAll,
-                gameEntity.get().getStatus() ? GameStatus.STARTING.name()
+                gameEntity.get().getStatus()
+                        || !(second < 30) ? GameStatus.STARTING.name()
                         : !(second == 0)
                         ? GameStatus.BET_LOCKED.name()
                         : GameStatus.CLOSED.name(),

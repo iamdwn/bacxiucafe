@@ -42,14 +42,15 @@ public class GameDetailService {
 
     public BetResponse bet(String username, BetRequest betDTO) {
         Optional<UserEntity> userEntity = userRepository.findByUsernameAndStatusTrue(username);
-        Optional<GameEntity> gameEntity = gameRepository.findFirstByStatusIsTrueOrderByGameStartDesc();
+        Optional<GameEntity> gameEntity = gameRepository.findFirstByGameStartDesc();
         Optional<WalletEntity> walletEntity = walletRepository.findByUser(userEntity.get());
 
         if (!userEntity.isPresent()
                 || !(userEntity.get() != null))
             throw new RuntimeException("this user is not exist");
 
-        if (!gameEntity.isPresent())
+        if (!gameEntity.isPresent()
+                || !(gameService.getCurrentSecond() >= 10))
             throw new RuntimeException("this bet of game is locked");
 
         if (!walletEntity.isPresent())

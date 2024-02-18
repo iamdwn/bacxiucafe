@@ -19,6 +19,9 @@ public interface GameRepository extends JpaRepository<GameEntity, Long> {
     Optional<GameEntity> findById(Long gameId);
 
     Optional<GameEntity> findFirstByStatusIsTrueOrderByGameStartDesc();
+
+    @Query("SELECT ge FROM GameEntity ge WHERE ge.status = true ORDER BY ge.gameStart DESC LIMIT 1")
+    Optional<GameEntity> findFirstByGameStartDesc();
 //    @Query("SELECT ge FROM  GameEntity ge WHERE ge.status = true OR " +
 //            "( ge.status = false AND ge.countdown > 0)" +
 //            " ORDER BY ge.gameStart DESC LIMIT 1")
