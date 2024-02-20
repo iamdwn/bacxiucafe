@@ -41,10 +41,10 @@ public class UserController {
             if (TokenChecker.checkToken(token)) {
                 String username = jwtService.extractTokenToGetUser(token);
                 return ResponseEntity.status(HttpStatus.OK)
-                        .body(new ResponseObject(dozun.game.enums.ResponseStatus.SUCCESS, "success", userService.getCurrentUser(username)));
+                        .body(new ResponseObject(dozun.game.enums.ResponseStatus.SUCCESS, "Success", userService.getCurrentUser(username)));
             }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ResponseObject(dozun.game.enums.ResponseStatus.BAD_REQUEST, "not found", "failed"));
+                    .body(new ResponseObject(dozun.game.enums.ResponseStatus.BAD_REQUEST, "Not found", "Failed"));
         } catch (RuntimeException ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ResponseObject(ResponseStatus.BAD_REQUEST, ex.getMessage(), ""));

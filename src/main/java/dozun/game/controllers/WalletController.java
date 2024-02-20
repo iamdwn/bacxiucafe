@@ -40,13 +40,13 @@ public class WalletController {
             if (TokenChecker.checkToken(token)) {
                 walletService.charge(walletDTO);
                 return ResponseEntity.status(HttpStatus.OK)
-                        .body(new ResponseObject(dozun.game.enums.ResponseStatus.SUCCESS, "success", ""));
+                        .body(new ResponseObject(dozun.game.enums.ResponseStatus.SUCCESS, "Success", ""));
             }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ResponseObject(dozun.game.enums.ResponseStatus.BAD_REQUEST, "failed", "charge failed"));
+                    .body(new ResponseObject(dozun.game.enums.ResponseStatus.BAD_REQUEST, "Failed", "Charge failed"));
         } catch (RuntimeException ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ResponseObject(ResponseStatus.BAD_REQUEST, ex.getMessage(), "charge failed"));
+                    .body(new ResponseObject(ResponseStatus.BAD_REQUEST, ex.getMessage(), "Charge failed"));
         }
     }
 }

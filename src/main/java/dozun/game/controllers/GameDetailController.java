@@ -49,10 +49,10 @@ public class GameDetailController {
             String username = jwtService.extractTokenToGetUser(token);
             if (TokenChecker.checkToken(token)) {
                 return ResponseEntity.status(HttpStatus.OK)
-                        .body(new ResponseObject(ResponseStatus.SUCCESS, "success", gameDetailService.bet(username, betDTO)));
+                        .body(new ResponseObject(ResponseStatus.SUCCESS, "Success", gameDetailService.bet(username, betDTO)));
             }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ResponseObject(ResponseStatus.BAD_REQUEST, "failed", "bet failed"));
+                    .body(new ResponseObject(ResponseStatus.BAD_REQUEST, "Failed", "Bet failed"));
         } catch (RuntimeException ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ResponseObject(ResponseStatus.BAD_REQUEST, ex.getMessage(), ""));
@@ -66,9 +66,9 @@ public class GameDetailController {
             token = "Bearer " + token;
             String username = jwtService.extractTokenToGetUser(token);
             Optional<UserEntity> userEntity = userRepository.findByUsernameAndStatusTrue(username);
-            if (!userEntity.isPresent()) throw new RuntimeException("Not found user");
+            if (!userEntity.isPresent()) throw new RuntimeException("User not found");
             Optional<WalletEntity> walletEntity = walletRepository.findByUser(userEntity.get());
-            if (!userEntity.isPresent()) throw new RuntimeException("Not found wallet");
+            if (!userEntity.isPresent()) throw new RuntimeException("Wallet not found");
 
                     BetRequest betRequest = new BetRequest(
                     walletEntity.get().getBaseBalance(),
@@ -77,10 +77,10 @@ public class GameDetailController {
 
             if (TokenChecker.checkToken(token)) {
                 return ResponseEntity.status(HttpStatus.OK)
-                        .body(new ResponseObject(ResponseStatus.SUCCESS, "success", gameDetailService.bet(username, betRequest)));
+                        .body(new ResponseObject(ResponseStatus.SUCCESS, "Success", gameDetailService.bet(username, betRequest)));
             }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ResponseObject(ResponseStatus.BAD_REQUEST, "failed", "bet failed"));
+                    .body(new ResponseObject(ResponseStatus.BAD_REQUEST, "Failed", "Bet failed"));
         } catch (RuntimeException ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ResponseObject(ResponseStatus.BAD_REQUEST, ex.getMessage(), ""));

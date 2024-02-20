@@ -48,19 +48,19 @@ public class GameDetailService {
 
         if (!userEntity.isPresent()
                 || !(userEntity.get() != null))
-            throw new RuntimeException("this user is not exist");
+            throw new RuntimeException("The specified user does not exist");
 
         if (!gameEntity.isPresent()
                 || !(gameService.getCurrentSecond() >= 10))
-            throw new RuntimeException("this bet of game is locked");
+            throw new RuntimeException("The current game bet is locked");
 
         if (!walletEntity.isPresent())
-            throw new RuntimeException("your balance is not enough for this bet");
+            throw new RuntimeException("Your balance is insufficient to place this bet");
 
         if (walletEntity.get().getBaseBalance() <= 0
                 || (walletEntity.get().getBaseBalance() > 0
                 && (walletEntity.get().getBaseBalance().compareTo(betDTO.getBetAmount())) == -1))
-            throw new RuntimeException("your balance is not enough for this bet");
+            throw new RuntimeException("Your balance is insufficient to place this bet");
 
         BetType betType = betDTO.getBetType().equalsIgnoreCase(BetType.TAI.name())
                 ? BetType.TAI
