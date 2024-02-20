@@ -71,7 +71,7 @@ public class GameDetailController {
             if (!userEntity.isPresent()) throw new RuntimeException("Not found wallet");
 
                     BetRequest betRequest = new BetRequest(
-                    walletEntity.get().getBalance(),
+                    walletEntity.get().getBaseBalance(),
                     betDTO.getBetType()
             );
 

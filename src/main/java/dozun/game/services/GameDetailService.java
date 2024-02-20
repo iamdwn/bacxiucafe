@@ -57,9 +57,9 @@ public class GameDetailService {
         if (!walletEntity.isPresent())
             throw new RuntimeException("your balance is not enough for this bet");
 
-        if (walletEntity.get().getBalance() <= 0
-                || (walletEntity.get().getBalance() > 0
-                && (walletEntity.get().getBalance().compareTo(betDTO.getBetAmount())) == -1))
+        if (walletEntity.get().getBaseBalance() <= 0
+                || (walletEntity.get().getBaseBalance() > 0
+                && (walletEntity.get().getBaseBalance().compareTo(betDTO.getBetAmount())) == -1))
             throw new RuntimeException("your balance is not enough for this bet");
 
         BetType betType = betDTO.getBetType().equalsIgnoreCase(BetType.TAI.name())
