@@ -49,21 +49,4 @@ public class WalletController {
                     .body(new ResponseObject(ResponseStatus.BAD_REQUEST, ex.getMessage(), "charge failed"));
         }
     }
-
-//    @GetMapping
-//    public ResponseEntity<ResponseObject> getWallet(HttpServletRequest request) {
-//        try {
-//            String token = request.getHeader("Authorization");
-//            if (TokenChecker.checkToken(token)) {
-//                String username = jwtService.extractTokenToGetUser(token);
-//                return ResponseEntity.status(HttpStatus.OK)
-//                        .body(new ResponseObject(dozun.game.enums.ResponseStatus.SUCCESS, "success", walletService.getWallet(username)));
-//            }
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-//                    .body(new ResponseObject(dozun.game.enums.ResponseStatus.BAD_REQUEST, "failed", "get failed"));
-//        } catch (RuntimeException ex) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-//                    .body(new ResponseObject(ResponseStatus.BAD_REQUEST, ex.getMessage(), "get failed"));
-//        }
-//    }
 }

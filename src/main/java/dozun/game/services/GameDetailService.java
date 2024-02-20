@@ -62,13 +62,6 @@ public class GameDetailService {
                 && (walletEntity.get().getBalance().compareTo(betDTO.getBetAmount())) == -1))
             throw new RuntimeException("your balance is not enough for this bet");
 
-//        BetType betType = (gameEntity.get().getDice1() == gameEntity.get().getDice2()
-//                && gameEntity.get().getDice1() == gameEntity.get().getDice3())
-//                ? BetType.TAMBAO
-//                : betDTO.getBetType().equalsIgnoreCase(BetType.TAI.name())
-//                ? BetType.TAI
-//                : BetType.XIU;
-
         BetType betType = betDTO.getBetType().equalsIgnoreCase(BetType.TAI.name())
                 ? BetType.TAI
                 : BetType.XIU;
@@ -89,13 +82,9 @@ public class GameDetailService {
                 betDTO.getBetAmount(),
                 betType,
                 gameResult,
-//                (gameService.getCurrentSecond() > 0
-//                        && !gameEntity.get().getStatus())
-//                        || gameEntity.get().getStatus() ? null : gameResult
                 true
         );
         gameDetailRepository.save(gameDetailEntity);
-
 
         return new BetResponse(
                 gameDetailEntity.getUser().getUsername(),
@@ -110,23 +99,4 @@ public class GameDetailService {
                 ? GameResult.WIN
                 : GameResult.LOSE;
     }
-
-//    public void exchange(UserEntity userEntity, BetType gameType, WalletEntity walletEntity, GameEntity gameEntity) {
-//            if (!gameDetailRepository.findAllByGame(gameEntity).isEmpty()
-//                    && !(gameDetailRepository.findAllByGame(gameEntity) == null)) {
-//
-//                if (gameService.getCurrentSecond() == 0) {
-//                    List<GameDetailEntity> gde = gameDetailRepository.getByUserAndGame(userEntity, gameEntity);
-//                    result = gde > 0
-//                            ? gameDetailRepository.getSumByUserAndGame(userEntity, gameEntity, gameType)
-//                            : 0D;
-//                            saveWallet(walletEntity);
-//
-//            }
-//        }
-//    }
-
-//    public Double getResult() {
-//        return result;
-//    }
 }

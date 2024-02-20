@@ -14,11 +14,6 @@ import java.util.Optional;
 
 @Repository
 public interface GameDetailRepository extends JpaRepository<GameDetailEntity, Long> {
-    @Query("SELECT gde FROM GameDetailEntity gde JOIN GameEntity ge ON ge.id = gde.game.id " +
-            "WHERE gde.user =:user AND gde.game =:game AND ge.status = true")
-    Optional<GameDetailEntity> findByUserAndGame(@Param("user") UserEntity user,
-                                                 @Param("game") GameEntity game);
-
     @Query("SELECT SUM(gde.betAmount) FROM GameDetailEntity gde JOIN GameEntity ge ON ge.id = gde.game.id " +
             "WHERE gde.user =:user AND gde.game =:game AND gde.betType = :betType")
     Double getSumByUserAndGame(@Param("user") UserEntity user,

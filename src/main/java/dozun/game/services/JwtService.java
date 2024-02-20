@@ -24,12 +24,7 @@ public class JwtService {
     public String generateToken(UserEntity user, Collection<SimpleGrantedAuthority> authorities) {
         Algorithm algorithm = Algorithm.HMAC256(Secret_key.getBytes());
         return JWT.create()
-//                .withSubject(user.getUsername())
-//                .withClaim("id", user.getId())
                 .withClaim("user", user.getUsername())
-//                .withClaim("fullname",user.getFullName())
-//                .withClaim("email",user.getEmail())
-//                .withClaim("picture", user.getPicture())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 3600 * 1000))
                 .withClaim("roles", authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .sign(algorithm);

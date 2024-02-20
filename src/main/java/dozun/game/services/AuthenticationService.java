@@ -34,7 +34,6 @@ public class AuthenticationService {
             role = roleCustomRepo.getRole(user);
         }
 
-
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         Set<RoleEntity> setRole = new HashSet<>();
         role.stream().forEach(r -> setRole.add(new RoleEntity(r.getName())));

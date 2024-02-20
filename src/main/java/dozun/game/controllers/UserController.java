@@ -34,16 +34,9 @@ public class UserController {
         this.jwtService = jwtService;
     }
 
-//    @PostMapping("/signup")
-//    public ResponseEntity<ResponseObject> signup(@Valid @RequestBody UserDTO user) {
-//        return userService.signup(user);
-//    }
-
-
     @GetMapping
     public ResponseEntity<ResponseObject> getCurrentUser(@RequestHeader("bearerAuth") String token) {
         try {
-//            String token = request.getHeader("Authorization");
             token = "Bearer " + token;
             if (TokenChecker.checkToken(token)) {
                 String username = jwtService.extractTokenToGetUser(token);

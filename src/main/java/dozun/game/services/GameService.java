@@ -28,15 +28,11 @@ public class GameService {
 
     private GameGenerator gameGenerator;
     private ScheduleExecutor scheduleExecutor;
-
-    private BetType betType;
     private GameRepository gameRepository;
-    private Duration duration;
     private final SimpMessagingTemplate messagingTemplate;
     private GameDetailRepository gameDetailRepository;
     private ScheduledExecutorService scheduler;
     private ScheduledExecutorService scheduledExecutor;
-    private Long tracked = 0L;
     private Long second = Duration.valueOf("GAME_DURATION").getDur();
 
     @Autowired
@@ -50,30 +46,7 @@ public class GameService {
         this.scheduledExecutor = scheduledExecutor;
     }
 
-//    public DiceResult start() {
-//        Timer timer = new Timer();
-//        timer.schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//                int currentCount = counter.incrementAndGet();
-//                DiceResult diceResult = gameGenerator.getGame();
-//                BetType gameType = checkGameType(diceResult);
-//                GameEntity gameEntity = new GameEntity(
-//                        diceResult.getDice1(),
-//                        diceResult.getDice2(),
-//                        diceResult.getDice3(),
-//                        gameType,
-//                        new Date(),
-//                        Duration.valueOf("GAME_DURATION").getDur(),
-//                        true
-//                );
-//                gameRepository.save(gameEntity);
-//        }, 0, Duration.valueOf("GAME_DURATION").getDur() * 1000L);
-//}
-
     public void start() {
-//        scheduler.scheduleAtFixedRate(this::generate, 0, 33, TimeUnit.SECONDS);
-//        scheduler.scheduleAtFixedRate(() -> generate(user), 0, 33, TimeUnit.SECONDS);
         generate();
     }
 
@@ -108,27 +81,10 @@ public class GameService {
             gameRepository.save(gameEntity);
         }, 0, 35, TimeUnit.SECONDS);
 
-//        scheduledExecutor.scheduleAtFixedRate(() -> {
-//            messagingTemplate.convertAndSend("/topic/game",
-//                    getCurrentGame(true));
-//        }, 1, 30, TimeUnit.SECONDS);
-//
-//        scheduledExecutor.scheduleAtFixedRate(() -> {
-//            messagingTemplate.convertAndSend("/topic/game",
-//                    getCurrentGame(false));
-//        }, 1, 1, TimeUnit.SECONDS);
-
         scheduledExecutor.scheduleAtFixedRate(() -> {
             messagingTemplate.convertAndSend("/topic/game",
                     getCurrentGame());
         }, 1, 1, TimeUnit.SECONDS);
-
-        scheduledExecutor.schedule(() -> {
-            if (!(getCurrentSecond() > 5)) {
-                    tracked++;
-            } else resetTracked();
-        }, 30, TimeUnit.SECONDS);
-
     }
 
     private void lockBet(GameEntity gameEntity) {
@@ -148,16 +104,8 @@ public class GameService {
         second = Duration.valueOf("GAME_DURATION").getDur();
     }
 
-    public void resetTracked() {
-        tracked = 0L;
-    }
-
     public Long getCurrentSecond() {
         return second;
-    }
-
-    public Long getCurrentTracked() {
-        return tracked;
     }
 
     public BetType checkGameType(DiceResult diceResult) {
@@ -186,11 +134,6 @@ public class GameService {
         Double sumMaxOfAll = 0D;
         Double sumMinOfAll = 0D;
         Optional<GameEntity> gameEntity = gameRepository.findFirstOrderByGameStartDesc();
-//        if (!gameDetailRepository.findAllByGame(gameEntity.get()).isEmpty()
-//                && !(gameDetailRepository.findAllByGame(gameEntity.get()) == null)) {
-//            sumMaxOfAll = gameDetailRepository.getSumByAllUserAndGame(gameEntity.get(), BetType.TAI);
-//            sumMinOfAll = gameDetailRepository.getSumByAllUserAndGame(gameEntity.get(), BetType.XIU);
-//        }
 
         if (!gameDetailRepository.findAllByGame(gameEntity.get()).isEmpty()
                 && !(gameDetailRepository.findAllByGame(gameEntity.get()) == null)) {

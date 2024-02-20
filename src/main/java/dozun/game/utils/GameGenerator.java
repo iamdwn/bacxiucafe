@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class GameGenerator {
-    private DiceResult diceResult;
 
     public DiceResult getGame(){
         int dice1 = ScheduleExecutor.getDice1();

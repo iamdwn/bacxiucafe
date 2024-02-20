@@ -45,7 +45,6 @@ public class GameDetailController {
     public ResponseEntity<ResponseObject> bet(@RequestHeader("bearerAuth") String token,
                                               @RequestBody BetRequest betDTO) {
         try {
-//            String token = request.getHeader("Authorization");
             token = "Bearer " + token;
             String username = jwtService.extractTokenToGetUser(token);
             if (TokenChecker.checkToken(token)) {
@@ -64,7 +63,6 @@ public class GameDetailController {
     public ResponseEntity<ResponseObject> betAll(@RequestHeader("bearerAuth") String token,
                                                  @RequestBody BetAllRequest betDTO) {
         try {
-//            String token = request.getHeader("Authorization");
             token = "Bearer " + token;
             String username = jwtService.extractTokenToGetUser(token);
             Optional<UserEntity> userEntity = userRepository.findByUsernameAndStatusTrue(username);

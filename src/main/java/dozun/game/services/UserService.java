@@ -48,38 +48,6 @@ public class UserService {
         this.hashing = hashing;
     }
 
-
-    public UserEntity saveUser(UserEntity user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
-    }
-
-    public RoleEntity saveRole(RoleEntity role) {
-        return null;
-    }
-
-    public void addToUser(String username, String rolename) {
-        UserEntity user = userRepository.findByUsernameAndStatusTrue(username).get();
-        RoleEntity role = roleRepository.findByName(rolename);
-        user.getRoles().add(role);
-    }
-
-    public List<UserEntity> getAllUser() {
-        return userRepository.findAll();
-    }
-
-    public ResponseEntity<ResponseObject> signup(UserDTO user) {
-        Optional<UserEntity> userEntity = userRepository.findByUsernameAndStatusTrue(user.getUsername());
-        if (userEntity.isPresent()) return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ResponseObject(ResponseStatus.BAD_REQUEST, "this username is exist", ""));
-
-        userEntity.get().setUsername(user.getUsername());
-        userEntity.get().setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(userEntity.get());
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new ResponseObject(ResponseStatus.SUCCESS, "signup successfully", ""));
-    }
-
     public UserBetResponse getCurrentUser(String username) {
         Double sumMax = 0D;
         Double sumMin = 0D;
@@ -100,8 +68,6 @@ public class UserService {
             sumMin = (gameDetailRepository.getByUserAndGame(userEntity.get(), gameEntity.get(), BetType.XIU)) > 0
                     ? gameDetailRepository.getSumByUserAndGame(userEntity.get(), gameEntity.get(), BetType.XIU) : 0D;
         }
-
-//        gameDetailService.exchange(userEntity.get(), gameEntity.get().getType(), walletEntity.get(), gameEntity.get());
 
         if (!(gameService.getCurrentSecond() > 0)) {
             walletEntity.get().setBaseBalance(walletEntity.get().getBalance());

@@ -15,7 +15,7 @@ import org.springframework.beans.factory.DisposableBean;
 import java.util.Optional;
 
 @Component
-public class ApplicationListenerConfig implements ApplicationListener<ApplicationReadyEvent>, DisposableBean {
+public class ApplicationListenerConfig implements ApplicationListener<ApplicationReadyEvent> {
 
     private GameService gameService;
     private GameRepository gameRepository;
@@ -30,24 +30,4 @@ public class ApplicationListenerConfig implements ApplicationListener<Applicatio
     public void onApplicationEvent(ApplicationReadyEvent event) {
         gameService.start();
     }
-
-    @Override
-    public void destroy() {
-//        Optional<GameEntity> gameEntity = gameRepository.findFirstByStatusOrderByGameStartDesc();
-//        if (!gameEntity.isPresent()) {
-//            gameEntity.get().setCountdown(0L);
-//            gameEntity.get().setStatus(false);
-//            gameRepository.save(gameEntity.get());
-//        }
-    }
-
-//    @PreDestroy
-//    public void preDestroy() {
-//        Optional<GameEntity> gameEntity = gameRepository.findFirstByStatusOrderByGameStartDesc();
-//        if (!gameEntity.isPresent()) {
-//            gameEntity.get().setCountdown(0L);
-//            gameEntity.get().setStatus(false);
-//            gameRepository.save(gameEntity.get());
-//        }
-//    }
 }

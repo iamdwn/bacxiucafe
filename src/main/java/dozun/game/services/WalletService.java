@@ -36,18 +36,4 @@ public class WalletService {
 
         walletRepository.save(walletEntity.get());
     }
-
-//    public WalletResponse getWallet(String username) {
-//        Optional<UserEntity> userEntity = userRepository.findByUsernameAndStatusTrue(username);
-//        Optional<WalletEntity> walletEntity = walletRepository.findByUser(userEntity.get());
-//
-//        if (!userEntity.isPresent()) throw new RuntimeException("not found user");
-//
-//        if (!walletEntity.isPresent()) throw new RuntimeException("not found user");
-//
-//        return new WalletResponse(
-//                username,
-//                walletEntity.get().getBalance()
-//        );
-//    }
 }

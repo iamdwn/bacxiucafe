@@ -58,11 +58,6 @@ public class AuthenticationController {
     @Autowired
     RoleCustomRepository roleCustomRepo;
 
-//    @GetMapping("/getAllUser")
-//    public List<UserEntity> getAllUser() {
-//        return userService. getAllUser();
-//    }
-
     @PostMapping("/signin")
     public ResponseEntity<?> login(@RequestBody AuthenticationRequest authenticationRequest) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -107,93 +102,5 @@ public class AuthenticationController {
         AuthenticationRequest authenticationRequest = new AuthenticationRequest(signUpRequest.getUsername(), signUpRequest.getPassword());
         return ResponseEntity.ok(authenticationService.authenticate(authenticationRequest));
     }
-
-//    @PostMapping("google")
-//    public ResponseEntity<?> loginGoogle(@Valid @RequestBody SignupRequest signUpRequest) {
-//
-//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//
-//        Optional<UserEntity> o_user = userRepository.findByUsernameAndStatusTrue(signUpRequest.getEmail());
-//        if (o_user.isPresent()) {
-//            String encodedPasswordFromDatabase = o_user.get().getPassword();
-//            if (!passwordEncoder.matches(signUpRequest.getPassword(), encodedPasswordFromDatabase)) {
-//                return ResponseEntity.badRequest().body(new MessageResponse("Error: Username or password is wrong!"));
-//            } else {
-//                AuthenticationRequest authenticationRequest = new AuthenticationRequest(signUpRequest.getEmail(), signUpRequest.getPassword());
-//                return ResponseEntity.ok(authenticationService.authenticate(authenticationRequest));
-//            }
-//        }
-//        UserEntity user = new UserEntity(signUpRequest.getFullName(),
-//                signUpRequest.getUsername(),
-//                signUpRequest.getEmail(),
-//                encoder.encode(signUpRequest.getPassword()),
-//                true,
-//                true
-//        );
-//        Set<RoleEntity> roleEntities = new HashSet<>();
-//        RoleEntity userRole = roleRepository.findByName("USER");
-//        roleEntities.add(userRole);
-//        user.setRoles(roleEntities);
-//        userRepository.save(user);
-//        AuthenticationRequest authenticationRequest = new AuthenticationRequest(signUpRequest.getEmail(), signUpRequest.getPassword());
-//        return ResponseEntity.ok(authenticationService.authenticate(authenticationRequest));
-//    }
-
-//    @GetMapping("/getUserInfo")
-//    public UserDTO InfoUser(@RequestHeader("Authorization") String token) {
-//
-//        String username = jwtService.extractTokenToGetUser(token.substring(7));
-//        List<String> roles = jwtService.extractTokenToGetRoles(token.substring(7));
-//        Optional<UserEntity> user = userRepository.findByUsernameAndStatusTrue(username);
-//        UserDTO userDTO = new UserDTO();
-//        userDTO.setFullName(user.get().getFullName());
-//        userDTO.setEmail(user.get().getEmail());
-//        userDTO.setId(user.get().getId());
-//        userDTO.setPassword(user.get().getPassword());
-//        userDTO.setRoles(roles);
-//        userDTO.setUsername(user.get().getUsername());
-//        return userDTO;
-//
-//    }
-
-//    @GetMapping("/refreshToken")
-//    public ResponseEntity<?> getNewToken(@RequestHeader("Authorization") String refreshToken) {
-//        String username = jwtService.extractTokenToGetUser(refreshToken.substring(7));
-//        if (username != null) {
-//            UserEntity user = userRepository.findByUsernameAndStatusTrue(username).orElseThrow();
-//            List<RoleEntity> role = null;
-//            if (user != null) {
-//                role = roleCustomRepo.getRole(user);
-//            }
-//            Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-//            Set<RoleEntity> set = new HashSet<>();
-//            role.stream().forEach(c -> set.add(new RoleEntity(c.getName())));
-//            user.setRoles(set);
-//            set.stream().forEach(i -> authorities.add(new SimpleGrantedAuthority(i.getName())));
-//            var jwtToken = jwtService.generateToken(user, authorities);
-//            AuthenticationResponse authenticationResponse = new AuthenticationResponse();
-//            authenticationResponse.setToken(jwtToken);
-//            authenticationResponse.setRefreshToken(refreshToken.substring(7));
-//            return ResponseEntity.ok(authenticationResponse);
-//        }
-//        return ResponseEntity.badRequest().body(new MessageResponse("Can not have new token!!!"));
-//
-//    }
-//   @GetMapping("/logout")
-//public ResponseEntity<String> logout(@RequestHeader("Authorization") String authorizationHeader) {
-//       String token = authorizationHeader.substring(7);
-//    // Lấy token từ yêu cầu HTTP
-//    String token = request.getHeader("Authorization");
-//
-//    // Xóa token khỏi session
-//    SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
-//    SecurityContextHolder.getContext().setAuthentication(null);
-//    SecurityContextHolder.getContext().getAuthentication().invalidate();
-//
-//    // Truyền thông với người dùng rằng họ đã đăng xuất
-//    return ResponseEntity.ok("Đăng xuất thành công!");
-//}
-//
-//}
 }
 
