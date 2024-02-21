@@ -37,7 +37,7 @@ public class WalletController {
                                               @Valid @RequestBody WalletDTO walletDTO) {
         try {
             String token = request.getHeader("Authorization");
-            if (TokenChecker.checkToken(token)) {
+            if (TokenChecker.checkRole(token, true)) {
                 walletService.charge(walletDTO);
                 return ResponseEntity.status(HttpStatus.OK)
                         .body(new ResponseObject(dozun.game.enums.ResponseStatus.SUCCESS, "Success", ""));
