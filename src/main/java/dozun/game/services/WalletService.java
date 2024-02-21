@@ -32,7 +32,7 @@ public class WalletService {
         if (!walletEntity.isPresent()) throw new RuntimeException("not found user");
 
         walletEntity.get().setBalance(walletEntity.get().getBalance() + walletDTO.getChargeAmount());
-        walletEntity.get().setBaseBalance(walletEntity.get().getBalance() + walletDTO.getChargeAmount());
+        walletEntity.get().setBaseBalance(walletEntity.get().getBalance());
 
         walletRepository.save(walletEntity.get());
     }
