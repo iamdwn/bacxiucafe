@@ -1,6 +1,7 @@
 package dozun.game.services;
 
 import dozun.game.entities.*;
+import dozun.game.enums.BetRate;
 import dozun.game.enums.BetType;
 import dozun.game.enums.GameResult;
 import dozun.game.enums.ResponseStatus;
@@ -83,7 +84,7 @@ public class UserService {
                         || gameEntity.get().getStatus() ? null : gameEntity.get().getType().name(),
                 gameService.getCurrentSecond() >= 1
                         ? 0D : gameEntity.get().getType().equals(BetType.TAI)
-                        ? sumMax * 2 : sumMin * 2,
+                        ? sumMax * BetRate.RATE.getRate() : sumMin * BetRate.RATE.getRate(),
                 gameService.getCurrentSecond() >= 1
                         ? 0D : gameEntity.get().getType().equals(BetType.TAI)
                         ? 0 - sumMin : 0 - sumMax

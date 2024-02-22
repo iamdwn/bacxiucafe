@@ -1,6 +1,7 @@
 package dozun.game.services;
 
 import dozun.game.entities.WalletEntity;
+import dozun.game.enums.BetRate;
 import dozun.game.enums.BetType;
 import dozun.game.enums.GameStatus;
 import dozun.game.payloads.requests.BetRequest;
@@ -72,7 +73,7 @@ public class GameDetailService {
 
         GameResult gameResult = checkWin(betType, gameEntity.get());
         if (gameResult.equals(GameResult.WIN)) {
-            walletEntity.get().setBalance(walletEntity.get().getBalance() + betDTO.getBetAmount() * 2);
+            walletEntity.get().setBalance(walletEntity.get().getBalance() + betDTO.getBetAmount() * BetRate.RATE.getRate());
             walletRepository.save(walletEntity.get());
         }
 
