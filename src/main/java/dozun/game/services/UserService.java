@@ -70,7 +70,8 @@ public class UserService {
                     ? gameDetailRepository.getSumByUserAndGame(userEntity.get(), gameEntity.get(), BetType.XIU) : 0D;
         }
 
-        if (!(gameService.getCurrentSecond() > 0)) {
+        if (!(gameService.getCurrentSecond() > 0)
+                || gameDetailRepository.getByUser(userEntity.get(), gameEntity.get()) > 0) {
             walletEntity.get().setBaseBalance(walletEntity.get().getBalance());
             walletRepository.save(walletEntity.get());
         }

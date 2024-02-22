@@ -25,10 +25,6 @@ public class AuthenticationService {
     public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest){
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword()));
         UserEntity user = userRepository.findByUsernameAndStatusTrue(authenticationRequest.getUsername()).orElseThrow();
-        String fullname = user.getFullName();
-        String password = user.getPassword();
-        String email = user.getEmail();
-        UUID id = user.getId();
         List<RoleEntity> role = null;
         if(user != null){
             role = roleCustomRepo.getRole(user);
