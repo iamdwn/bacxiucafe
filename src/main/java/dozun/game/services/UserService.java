@@ -71,7 +71,7 @@ public class UserService {
         }
 
         if (!(gameService.getCurrentSecond() > 0)
-                || gameDetailRepository.getByUser(userEntity.get(), gameEntity.get()) > 0) {
+                || !(gameDetailRepository.getByUser(userEntity.get(), gameEntity.get()) > 0)) {
             walletEntity.get().setBaseBalance(walletEntity.get().getBalance());
             walletRepository.save(walletEntity.get());
         }
