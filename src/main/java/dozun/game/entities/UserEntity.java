@@ -126,6 +126,15 @@ public class UserEntity implements UserDetails {
         this.roles = roles;
     }
 
+    public UserEntity(String username, String email, String password, Date createAt, Boolean status, Boolean isVerify) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.createAt = createAt;
+        this.status = status;
+        this.isVerify = isVerify;
+    }
+
     @Override
     public String getPassword() {
         return password;

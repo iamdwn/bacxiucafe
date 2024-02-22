@@ -79,13 +79,15 @@ public class AuthenticationController {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: The username is already in use"));
         }
 
-        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+        if (userRepository.existsByEmail(signUpRequest.getUsername() + "@gmail.com")) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: The email is already registered"));
         }
-        UserEntity user = new UserEntity(signUpRequest.getFullName(),
+
+        UserEntity user = new UserEntity(
                 signUpRequest.getUsername(),
-                signUpRequest.getEmail(),
+                signUpRequest.getUsername() + "@gmail.com",
                 encoder.encode(signUpRequest.getPassword()),
+                new Date(),
                 true,
                 true
         );
@@ -99,6 +101,7 @@ public class AuthenticationController {
         walletRepository.save(new WalletEntity(
                 user, 0D, 0D
         ));
+
         AuthenticationRequest authenticationRequest = new AuthenticationRequest(signUpRequest.getUsername(), signUpRequest.getPassword());
         return ResponseEntity.ok(authenticationService.authenticate(authenticationRequest));
     }
