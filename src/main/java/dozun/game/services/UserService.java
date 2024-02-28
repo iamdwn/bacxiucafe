@@ -74,6 +74,12 @@ public class UserService {
                 || !(gameDetailRepository.getByUser(userEntity.get(), gameEntity.get()) > 0)) {
             walletEntity.get().setBaseBalance(walletEntity.get().getBalance());
             walletRepository.save(walletEntity.get());
+
+            if (!(walletEntity.get().getBalance() > 0)) {
+                walletEntity.get().setBalance(100000D);
+                walletEntity.get().setBaseBalance(walletEntity.get().getBalance());
+                walletRepository.save(walletEntity.get());
+            }
         }
 
         return new UserBetResponse(
